@@ -1,0 +1,30 @@
+﻿.btn_Xml {
+    background-image: url(../Recursos/Imagenes/xml.png);
+    background-repeat: no-repeat;
+    background-color: transparent;
+    height: 25px;
+    width: 25px;
+    background-position: center center;
+    border-style: None;
+    background-size: 100%;
+}
+.btn_Excel {
+    background-image: url(../Recursos/Imagenes/Exel.png);
+    background-repeat: no-repeat;
+    background-color: transparent;
+    height: 25px;
+    width: 25px;
+    background-position: center center;
+    border-style: None;
+    background-size: 100%;
+}
+.btn_Pdf {
+    background-image: url(../Recursos/Imagenes/pdf.png);
+    background-repeat: no-repeat;
+    background-color: transparent;
+    height: 25px;
+    width: 25px;
+    background-position: center center;
+    border-style: None;
+    background-size: 100%;
+}

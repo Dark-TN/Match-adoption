@@ -1,0 +1,170 @@
+﻿
+@{
+    ViewBag.Title = "Registro";
+    Layout = "~/Views/Shared/_MasterRegistro.cshtml";
+}
+
+<script type="text/javascript">
+    var urlCatalogoGenero = "@Url.Action("CatalogoGenero", "Catalogo")";
+    var urlCatalogoEscuela = "@Url.Action("CatalogoEscuela", "Catalogo")";
+    var urlCatalogoNivel = "@Url.Action("CatalogoNivel", "Catalogo")";
+    var urlCatalogoCarrera = "@Url.Action("CatalogoCarrera", "Catalogo")";
+    var urlCatalogoSituacion = "@Url.Action("CatalogoSituacion", "Catalogo")";
+    var urlCatalogoEvento = "@Url.Action("CatalogoEvento", "Catalogo")";
+    var urlCatalogoMedio = "@Url.Action("CatalogoMedio", "Catalogo")";
+    var urlRegistroAlumno = "@Url.Action("RegistroAlumno", "Registro")";
+    var urlRegistroExterno = "@Url.Action("RegistroExterno", "Registro")";
+</script>
+<script type="text/javascript" src="~/Scripts/Pagina/Registro/Registro.js"></script>
+
+<div class="row banner"><img class="banner-registro" src="~/Recursos/Imagenes/feyss.jpg" /></div>
+
+    <div class="container" id="title"><h2>Registro</h2></div>
+    <div id="exTab3" class="container">
+        <ul class="nav nav-pills">
+            <li class="active">
+                <a href="#1b" data-toggle="tab">Alumnos IPN</a>
+            </li>
+            <li>
+                <a href="#2b" data-toggle="tab">Externos</a>
+            </li>
+        </ul>
+
+        <div class="tab-content clearfix">
+            <div class="tab-pane active" id="1b">
+                <div class="row ">
+                    <div class="col-sm-4">
+                        <label>Nombre(s):</label>
+                        <input type="text" class="form-control" id="txtNombreAl" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Apellido paterno:</label>
+                        <input type="text" class="form-control" id="txtApPatAl" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Apellido materno:</label>
+                        <input type="text" class="form-control" id="txtApMatAl" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Boleta:</label>
+                        <input type="text" class="form-control AlfaNumerico" id="txtBoleta" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Edad:</label>
+                        <input type="text" class="form-control Numerico" id="txtEdadAl" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Género:</label>
+                        <select class="form-control" id="txtGeneroAl" required>
+                            <option value="0" selected="selected">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Escuela:</label>
+                        <select class="form-control" id="txtEscuelaAl" required>
+                            <option value="0" selected="selected">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Nivel:</label>
+                        <select class="form-control" id="txtNivel" required>
+                            <option value="0" selected="selected">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Carrera:</label>
+                        <select class="form-control" id="txtCarreraAl" required>
+                            <option value="0" selected="selected">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Situación académica:</label>
+                        <select class="form-control" id="txtSituaAl" required>
+                            <option value="0" selected="selected">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Evento:</label>
+                        <select class="form-control" id="txtEventoAl" required>
+                            <option value="0" selected="selected">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>E-mail</label>
+                        <input type="text" class="form-control Correo" id="txtEmailAl" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Medio por el que se enteró del evento:</label>
+                        <select class="form-control" id="txtMedioAl" required>
+                            <option value="0" selected="selected">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-1">
+                        <br />
+                        <button type="button" id="btnRegistrarAl" class="btn btn-success">Registrar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="2b">
+                <div class="row ">
+                    <div class="col-sm-4">
+                        <label>Nombre(s):</label>
+                        <input type="text" class="form-control" id="txtNombreEx" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Apellido paterno:</label>
+                        <input type="text" class="form-control" id="txtApPatEx" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Apellido materno:</label>
+                        <input type="text" class="form-control" id="txtApMatEx" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Edad:</label>
+                        <input type="text" class="form-control Numerico" id="txtEdadEx" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Género:</label>
+                        <select class="form-control" id="txtGeneroEx" required>
+                            <option value="0" selected="selected">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Escuela:</label>
+                        <input type="text" class="form-control" id="txtEscuelaEx" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Carrera:</label>
+                        <input type="text" class="form-control" id="txtCarreraEx" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Situación académica:</label>
+                        <select class="form-control" id="txtSituaEx" required>
+                            <option value="0" selected="selected">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Evento:</label>
+                        <select class="form-control" id="txtEventoEx" required>
+                            <option value="0" selected="selected">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>E-mail</label>
+                        <input type="text" class="form-control Correo" id="txtEmailEx" required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Medio por el que se enteró del evento:</label>
+                        <select class="form-control" id="txtMedioEx" required>
+                            <option value="0" selected="selected">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-1">
+                        <br />
+                        <button type="button" id="btnRegistrarEx" class="btn btn-success">Registrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

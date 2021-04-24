@@ -1,0 +1,177 @@
+﻿
+@model MVC.Models.Negocio.Usuario.OUsuario
+
+@{
+    ViewBag.Title = "Match Adoption";
+    Layout = "~/Views/Shared/_MasterInicio.cshtml";
+}
+<script type="text/javascript">
+    var urlRegistroSolicitante = '@Url.Action("RegistroSolicitante", "Usuario")';
+</script>
+<script type="text/javascript" src="~/Scripts/Pagina/Principal/Principal.js"></script>
+
+<script type="text/javascript">
+        @Html.Raw(ViewBag.Mensaje)
+</script>
+
+<div class="row text-center">
+    <h1>¿Estás listo para adoptar?</h1>
+    <h2>Descúbrelo</h2>
+</div>
+
+<div class="boxSlider">
+    <div class="slider">
+        <ul class="slider-parent">
+            <li class="images-list" data-slider="1"></li>
+            <li class="images-list" data-slider="2"></li>
+            <li class="images-list" data-slider="3"></li>
+            <li class="images-list" data-slider="4"></li>
+            <li class="images-list" data-slider="5"></li>
+            <li class="images-list" data-slider="6"></li>
+        </ul>
+        <ol class="buttom-circles">
+            <li class="buttom-circles-list slider-active" data-slider="1"><i class="fa fa-circle-thin"></i></li>
+            <li class="buttom-circles-list" data-slider="2"><i class="fa fa-circle-thin"></i></li>
+            <li class="buttom-circles-list" data-slider="3"><i class="fa fa-circle-thin"></i></li>
+            <li class="buttom-circles-list" data-slider="4"><i class="fa fa-circle-thin"></i></li>
+            <li class="buttom-circles-list" data-slider="5"><i class="fa fa-circle-thin"></i></li>
+            <li class="buttom-circles-list" data-slider="6"></li>
+        </ol>
+        <i class="fa fa-chevron-right fa-5x"></i>
+        <i class="fa fa-chevron-left fa-5x"></i>
+    </div>
+</div>
+
+<div id="modal-login" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Iniciar sesión</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Login", "Usuario", FormMethod.Post))
+                {
+                    <div class="row row-form">
+                        <div class="col-sm-6">
+                            <label>Correo electr&oacute;nico:</label>
+                            @Html.TextBoxFor(x => x.CorreoElectronico, new { @class = "form-control Correo", required = "required" })
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Contraseña:</label>
+                            @Html.TextBoxFor(x => x.Password, new { @class = "form-control", @type = "password", required = "required" })
+                        </div>
+                    </div>
+                    <div class="row row-form">
+                        <div class="col-sm-12 text-center">
+                            <label>¿No tienes cuenta? <a data-dismiss="modal" data-toggle ="modal" href="#modal-register">Reg&iacute;strate</a>.</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-sm-12 text-right">
+                            <button type="submit" class="btn btn-success">Iniciar sesi&oacute;n</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-register" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Registro</h4>
+            </div>
+            <div class="modal-body">
+
+                <ul class="nav nav-pills">
+                    <li class="active">
+                        <a href="#1a" data-toggle="tab">Solicitante</a>
+                    </li>
+                    <li>
+                        <a href="#2a" data-toggle="tab">Empleado</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content clearfix">
+                    <div class="tab-pane active" id="1a">
+                        @using (Html.BeginForm("RegistroSolicitante", "Usuario", FormMethod.Post))
+                        {
+                            <div class="row row-form">
+                                <div class="col-sm-4">
+                                    <label>CURP:</label>
+                                    <input type="text" class="form-control CURP" name="txtCURPUsuario" required />
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Nombre:</label>
+                                    <input type="text" class="form-control Alfa" name="txtNombreUsuario" required />
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Fecha de nacimiento:</label>
+                                    <input type="text" class="form-control datepicker Fecha" name="dtFechaNacimientoUsuario" required />
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Sexo:</label>
+                                    <select class="form-control" name="sctSexoUsuario" id="sctSexoUsuario" required>
+                                        <option value="0">Selecciona una opción</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Estado civil:</label>
+                                    <select class="form-control" name="sctEstadoCivil" id="sctEstadoCivil" required>
+                                        <option value="0">Selecciona una opción</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Nivel de estudios:</label>
+                                    <select class="form-control" name="sctNivelEstudios" id="sctNivelEstudios" required>
+                                        <option value="0">Selecciona una opción</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Ocupación:</label>
+                                    <input type="text" class="form-control Alfa" name="txtOcupacion" required />
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Dirección:</label>
+                                    <input type="text" class="form-control Alfanumerico" name="txtDireccion" required />
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Teléfono:</label>
+                                    <input type="text" class="form-control Telefono" name="txtTelefonoUsuario" required />
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Correo electr&oacute;nico:</label>
+                                    <input type="text" class="form-control Correo" name="txtCorreoRegistroUsuario" required />
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Contraseña:</label>
+                                    <input type="password" class="form-control" name="txtPasswordRegistroUsuario" required />
+                                </div>
+                                <div class="col-sm-12 reCaptchaContainer">
+                                    <div class="g-recaptcha" data-sitekey="6LftBosaAAAAAO6f9mxfmfcbPFIlVfl57uC23dJZ"></div>
+                                </div>
+                            </div>
+                            <div class="row row-form">
+                                <div class="col-sm-12 text-center">
+                                    <label>¿Ya tienes una cuenta? <a data-dismiss="modal" data-toggle ="modal" href="#modal-login">Inicia sesi&oacute;n</a>.</label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="col-sm-12 text-right">
+                                    <button type="submit" class="btn btn-success">Registrarse</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="tab-pane" id="2a">
+                        <h3>We use the class nav-pills instead of nav-tabs which automatically creates a background color for the tab</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

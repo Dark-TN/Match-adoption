@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/bundles/Css/Inicial")
+    @Scripts.Render("~/bundles/Js/Inicial")
+    @Scripts.Render("~/bundles/Js/DatePicker")
+    <link rel="stylesheet" type="text/css" href="~/Content/Master/Master.css" media="screen" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+</head>
+<body>
+    <div id="menu-model">
+        @Html.Partial("~/Views/Shared/_MenuInicio.cshtml")
+    </div>
+    <div class="main">
+        @RenderBody()
+    </div>
+</body>
+</html>

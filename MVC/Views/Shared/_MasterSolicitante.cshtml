@@ -1,0 +1,91 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/bundles/Css/Inicial")
+    @Scripts.Render("~/bundles/Js/Inicial")
+    @Styles.Render("~/bundles/Css/DataTables")
+    @Scripts.Render("~/bundles/Js/DataTables")
+    <link rel="stylesheet" type="text/css" href="~/Content/Master/Master.css" media="screen" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div id="menu-model">
+        @Html.Partial("~/Views/Shared/_MenuSolicitante.cshtml")
+    </div>
+    <div class="main">
+        @RenderBody()
+    </div>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modificar informaci&oacute;n</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row row-form">
+                        <div class="col-sm-4">
+                            <label>Nombre(s):</label>
+                            <input type="text" class="form-control" id="txtModalNombre" required>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Direcci&oacute;n:</label>
+                            <input type="text" class="form-control" id="txtModalDireccion" required>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Nombre de tu mascota:</label>
+                            <input type="text" class="form-control AlfaNumerico" id="txtModalNombreMascota" required>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Tipo:</label>
+                            <select class="form-control" id="sctModalTipo" required>
+                                <option value="0">Selecciona una opci&oacute;n</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Raza:</label>
+                            <input type="text" class="form-control" id="txtModalRaza" required>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Sexo de tu mascota:</label>
+                            <select class="form-control" id="sctModalSexo" required>
+                                <option value="0">Selecciona una opci&oacute;n</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Correo electr&oacute;nico:</label>
+                            <input type="text" class="form-control Correo" id="txtModalCorreoElectronico" required>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Contraseña actual:</label>
+                            <input type="password" class="form-control AlfaNumerico" id="txtModalPassword" required>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Nueva contraseña:</label>
+                            <input type="password" class="form-control AlfaNumerico" id="txtModalNuevaPassword" required>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Confirmar contraseña:</label>
+                            <input type="password" class="form-control AlfaNumerico" id="txtModalConfirmarPassword" required>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Subir imagen:</label>
+                            <input type='file' id="modalFileImagen" />
+                            <br><img id="modalMyImg" src="~/Recursos/ImagenesPerfil/noImage.jpg" alt="Tu imagen" height=100 width=100 required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="btnModificarInformacion">Aceptar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

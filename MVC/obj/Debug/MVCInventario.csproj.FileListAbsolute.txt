@@ -1,0 +1,225 @@
+C:\TFS\Inventarios\MvcVales\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\Microsoft.CodeAnalysis.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.IO.Compression.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\VBCSCompiler.exe
+C:\TFS\Inventarios\MvcVales\bin\ApplicationInsights.config
+C:\TFS\Inventarios\MvcVales\bin\MvcVales.dll.config
+C:\TFS\Inventarios\MvcVales\bin\MvcVales.dll
+C:\TFS\Inventarios\MvcVales\bin\MvcVales.pdb
+C:\TFS\Inventarios\MvcVales\bin\roslyn\csc.exe
+C:\TFS\Inventarios\MvcVales\bin\roslyn\csc.exe.config
+C:\TFS\Inventarios\MvcVales\bin\roslyn\csc.rsp
+C:\TFS\Inventarios\MvcVales\bin\roslyn\csi.exe
+C:\TFS\Inventarios\MvcVales\bin\roslyn\csi.exe.config
+C:\TFS\Inventarios\MvcVales\bin\roslyn\csi.rsp
+C:\TFS\Inventarios\MvcVales\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\Microsoft.CSharp.Core.targets
+C:\TFS\Inventarios\MvcVales\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\Microsoft.VisualBasic.Core.targets
+C:\TFS\Inventarios\MvcVales\bin\roslyn\Microsoft.Win32.Primitives.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.AppContext.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Collections.Immutable.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Console.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Diagnostics.Process.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Diagnostics.StackTrace.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.IO.FileSystem.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.IO.FileSystem.DriveInfo.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.IO.FileSystem.Primitives.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.IO.Pipes.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Reflection.Metadata.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Security.AccessControl.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Security.Claims.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Security.Cryptography.Encoding.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Security.Cryptography.Primitives.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Security.Principal.Windows.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Text.Encoding.CodePages.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Threading.Thread.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.ValueTuple.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Xml.ReaderWriter.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Xml.XmlDocument.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Xml.XPath.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\System.Xml.XPath.XDocument.dll
+C:\TFS\Inventarios\MvcVales\bin\roslyn\vbc.exe
+C:\TFS\Inventarios\MvcVales\bin\roslyn\vbc.exe.config
+C:\TFS\Inventarios\MvcVales\bin\roslyn\vbc.rsp
+C:\TFS\Inventarios\MvcVales\bin\roslyn\VBCSCompiler.exe.config
+C:\TFS\Inventarios\MvcVales\bin\Antlr3.Runtime.dll
+C:\TFS\Inventarios\MvcVales\bin\BussinessLayer.dll
+C:\TFS\Inventarios\MvcVales\bin\EntityLayer.dll
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.AI.Agent.Intercept.dll
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.AI.DependencyCollector.dll
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.AI.PerfCounterCollector.dll
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.AI.ServerTelemetryChannel.dll
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.AI.Web.dll
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.AI.WindowsServer.dll
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.ApplicationInsights.dll
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.AspNet.TelemetryCorrelation.dll
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.Web.Infrastructure.dll
+C:\TFS\Inventarios\MvcVales\bin\Newtonsoft.Json.dll
+C:\TFS\Inventarios\MvcVales\bin\System.Diagnostics.DiagnosticSource.dll
+C:\TFS\Inventarios\MvcVales\bin\System.Net.Http.Formatting.dll
+C:\TFS\Inventarios\MvcVales\bin\System.Web.Helpers.dll
+C:\TFS\Inventarios\MvcVales\bin\System.Web.Http.dll
+C:\TFS\Inventarios\MvcVales\bin\System.Web.Http.WebHost.dll
+C:\TFS\Inventarios\MvcVales\bin\System.Web.Mvc.dll
+C:\TFS\Inventarios\MvcVales\bin\System.Web.Optimization.dll
+C:\TFS\Inventarios\MvcVales\bin\System.Web.Razor.dll
+C:\TFS\Inventarios\MvcVales\bin\System.Web.WebPages.Deployment.dll
+C:\TFS\Inventarios\MvcVales\bin\System.Web.WebPages.dll
+C:\TFS\Inventarios\MvcVales\bin\System.Web.WebPages.Razor.dll
+C:\TFS\Inventarios\MvcVales\bin\Utilerias.dll
+C:\TFS\Inventarios\MvcVales\bin\WebGrease.dll
+C:\TFS\Inventarios\MvcVales\bin\DataLayer.dll
+C:\TFS\Inventarios\MvcVales\bin\BussinessLayer.pdb
+C:\TFS\Inventarios\MvcVales\bin\EntityLayer.pdb
+C:\TFS\Inventarios\MvcVales\bin\System.Net.Http.Formatting.xml
+C:\TFS\Inventarios\MvcVales\bin\System.Web.Http.xml
+C:\TFS\Inventarios\MvcVales\bin\System.Web.Http.WebHost.xml
+C:\TFS\Inventarios\MvcVales\bin\System.Web.Helpers.xml
+C:\TFS\Inventarios\MvcVales\bin\System.Web.Mvc.xml
+C:\TFS\Inventarios\MvcVales\bin\System.Web.Optimization.xml
+C:\TFS\Inventarios\MvcVales\bin\System.Web.Razor.xml
+C:\TFS\Inventarios\MvcVales\bin\System.Web.WebPages.xml
+C:\TFS\Inventarios\MvcVales\bin\System.Web.WebPages.Deployment.xml
+C:\TFS\Inventarios\MvcVales\bin\System.Web.WebPages.Razor.xml
+C:\TFS\Inventarios\MvcVales\bin\Newtonsoft.Json.xml
+C:\TFS\Inventarios\MvcVales\bin\Antlr3.Runtime.pdb
+C:\TFS\Inventarios\MvcVales\bin\System.Diagnostics.DiagnosticSource.xml
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.AspNet.TelemetryCorrelation.xml
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.AI.DependencyCollector.xml
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.AI.WindowsServer.xml
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.AI.Web.xml
+C:\TFS\Inventarios\MvcVales\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\TFS\Inventarios\MvcVales\bin\DataLayer.pdb
+C:\TFS\Inventarios\MvcVales\bin\es\System.Web.Helpers.resources.dll
+C:\TFS\Inventarios\MvcVales\bin\es\System.Web.Mvc.resources.dll
+C:\TFS\Inventarios\MvcVales\bin\es\System.Web.Optimization.resources.dll
+C:\TFS\Inventarios\MvcVales\bin\es\System.Web.Razor.resources.dll
+C:\TFS\Inventarios\MvcVales\bin\es\System.Web.WebPages.resources.dll
+C:\TFS\Inventarios\MvcVales\bin\es\System.Web.WebPages.Deployment.resources.dll
+C:\TFS\Inventarios\MvcVales\bin\es\System.Web.WebPages.Razor.resources.dll
+C:\TFS\Inventarios\MvcVales\obj\Debug\MVCInventario.csprojAssemblyReference.cache
+C:\TFS\Inventarios\MvcVales\obj\Debug\MVCInventario.csproj.CoreCompileInputs.cache
+C:\TFS\Inventarios\MvcVales\obj\Debug\MVCInventario.csproj.CopyComplete
+C:\TFS\Inventarios\MvcVales\obj\Debug\MvcVales.dll
+C:\TFS\Inventarios\MvcVales\obj\Debug\MvcVales.pdb
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\Microsoft.CodeAnalysis.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.IO.Compression.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\VBCSCompiler.exe
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\ApplicationInsights.config
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\MVCInventario.dll.config
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\MVCInventario.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\MVCInventario.pdb
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\csc.exe
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\csc.exe.config
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\csc.rsp
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\csi.exe
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\csi.exe.config
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\csi.rsp
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\Microsoft.CSharp.Core.targets
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\Microsoft.VisualBasic.Core.targets
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\Microsoft.Win32.Primitives.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.AppContext.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Collections.Immutable.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Console.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Diagnostics.Process.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Diagnostics.StackTrace.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.IO.FileSystem.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.IO.FileSystem.DriveInfo.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.IO.FileSystem.Primitives.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.IO.Pipes.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Reflection.Metadata.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Security.AccessControl.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Security.Claims.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Security.Cryptography.Encoding.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Security.Cryptography.Primitives.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Security.Principal.Windows.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Text.Encoding.CodePages.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Threading.Thread.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.ValueTuple.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Xml.ReaderWriter.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Xml.XmlDocument.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Xml.XPath.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\System.Xml.XPath.XDocument.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\vbc.exe
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\vbc.exe.config
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\vbc.rsp
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\roslyn\VBCSCompiler.exe.config
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Antlr3.Runtime.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\BussinessLayer.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\EntityLayer.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.AI.Agent.Intercept.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.AI.DependencyCollector.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.AI.PerfCounterCollector.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.AI.ServerTelemetryChannel.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.AI.Web.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.AI.WindowsServer.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.ApplicationInsights.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.AspNet.TelemetryCorrelation.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Newtonsoft.Json.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Diagnostics.DiagnosticSource.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Net.Http.Formatting.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.Helpers.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.Http.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.Http.WebHost.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.Mvc.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.Optimization.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.Razor.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.WebPages.Deployment.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.WebPages.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.WebPages.Razor.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\WebGrease.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\DataLayer.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\BussinessLayer.pdb
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\EntityLayer.pdb
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Net.Http.Formatting.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.Http.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.Http.WebHost.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.Helpers.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.Mvc.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.Optimization.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.Razor.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.WebPages.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.WebPages.Deployment.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Web.WebPages.Razor.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Newtonsoft.Json.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Antlr3.Runtime.pdb
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\System.Diagnostics.DiagnosticSource.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.AspNet.TelemetryCorrelation.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.AI.DependencyCollector.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.AI.WindowsServer.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.AI.Web.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\DataLayer.pdb
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\es\System.Web.Helpers.resources.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\es\System.Web.Mvc.resources.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\es\System.Web.Optimization.resources.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\es\System.Web.Razor.resources.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\es\System.Web.WebPages.resources.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\es\System.Web.WebPages.Deployment.resources.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\bin\es\System.Web.WebPages.Razor.resources.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\obj\Debug\MVCInventario.csprojAssemblyReference.cache
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\obj\Debug\MVCInventario.csproj.CoreCompileInputs.cache
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\obj\Debug\MVCInventario.csproj.CopyComplete
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\obj\Debug\MVCInventario.dll
+C:\Users\esAdmIN\Documents\SISTEMA INVENTARIOS\Inventarios\MvcVales\obj\Debug\MVCInventario.pdb
