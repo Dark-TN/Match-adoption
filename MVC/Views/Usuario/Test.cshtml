@@ -1,0 +1,52 @@
+﻿
+@using MVC.Models.Negocio.Test
+@model MVC.Models.ViewModels.SolicitanteViewModel
+
+@{
+    ViewBag.Title = "Test";
+    Layout = "~/Views/Shared/_MasterSolicitante.cshtml";
+}
+<script type="text/javascript">
+    var tiempoRestante = '@Model.Test.TiempoRestante';
+</script>
+<script type="text/javascript" src="~/Scripts/Pagina/Usuario/Test.js"></script>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="timer">Tiempo restante: <span id="minRest"></span>:<span id="segRest"></span></div>
+    </div>
+</div>
+
+@using (Html.BeginForm("ContestarTest", "Usuario", FormMethod.Post))
+{
+    <table id="grid" class="table table-striped table-bordered dt-responsive nowrap">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Pregunta</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Test.Preguntas.Count; i++)
+            {
+            <tr>
+                <td>@Model.Test.Preguntas[i].IdPregunta</td>
+                <td>@Model.Test.Preguntas[i].Pregunta</td>
+                @for (int j = 0; j < Model.Test.Preguntas[i].Respuesta.Count; j++)
+                {
+                    <td>@Html.RadioButtonFor(x => x.Test.Preguntas[i].Respuesta[j], "checked", new { @class = "form-check-input", @Name = "pregunta" + Model.Test.Preguntas[@i].IdPregunta.ToString(), required = "required" })</td>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+    <div class="col-sm-12 text-right">
+        <button type="submit" class="btn btn-success">Finalizar</button>
+    </div>
+}
+
+

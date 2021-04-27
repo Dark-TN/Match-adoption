@@ -362,7 +362,7 @@
     <Content Include="Scripts\Pagina\Usuario\Administrador.js" />
     <Content Include="Scripts\Pagina\Usuario\Alumno.js" />
     <Content Include="Scripts\Pagina\Usuario\Coordinador.js" />
-    <Content Include="Scripts\Pagina\Usuario\RealizarTest.js" />
+    <Content Include="Scripts\Pagina\Usuario\Test.js" />
     <Content Include="Scripts\Pagina\Usuario\Usuario.js" />
     <Content Include="Scripts\QRCode\qrcode.js" />
     <Content Include="Scripts\QRCode\qrcode.min.js" />
@@ -392,7 +392,7 @@
     <Content Include="Views\Shared\_MenuInicio.cshtml" />
     <Content Include="Views\Principal\Index.cshtml" />
     <Content Include="Views\Usuario\Solicitante.cshtml" />
-    <Content Include="Views\Usuario\RealizarTest.cshtml" />
+    <Content Include="Views\Usuario\Test.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

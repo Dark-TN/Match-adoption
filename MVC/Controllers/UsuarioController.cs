@@ -36,6 +36,28 @@ namespace MVC.Controllers
             return View(Session["Solicitante"]);
         }
 
+        public ActionResult Test()
+        {
+            if (((SolicitanteViewModel)Session["Solicitante"]).Test.FechaInicio == DateTime.MinValue || ((SolicitanteViewModel)Session["Solicitante"]).Test.FechaLimite == DateTime.MinValue)
+            {
+                ((SolicitanteViewModel)Session["Solicitante"]).Test.FechaInicio = DateTime.Now.AddSeconds(2); //Se agregan 2 segundos para compensar el tiempo de respuesta 
+                ((SolicitanteViewModel)Session["Solicitante"]).Test.FechaLimite = ((SolicitanteViewModel)Session["Solicitante"]).Test.FechaInicio.AddSeconds(((SolicitanteViewModel)Session["Solicitante"]).Test.TiempoDisponible);
+                ((SolicitanteViewModel)Session["Solicitante"]).Test.TiempoRestante = TimeSpan.FromTicks(((SolicitanteViewModel)Session["Solicitante"]).Test.FechaLimite.Ticks - ((SolicitanteViewModel)Session["Solicitante"]).Test.FechaInicio.Ticks).TotalSeconds;
+            }
+            else 
+            {
+                ((SolicitanteViewModel)Session["Solicitante"]).Test.TiempoRestante = ((SolicitanteViewModel)Session["Solicitante"]).Test.TiempoDisponible - TimeSpan.FromTicks((DateTime.Now.Ticks - ((SolicitanteViewModel)Session["Solicitante"]).Test.FechaInicio.Ticks)).TotalSeconds;
+            }
+            return View(Session["Solicitante"]);
+        }
+
+        [HttpPost]
+        public ActionResult ContestarTest(SolicitanteViewModel PmtPeticion)
+        {
+            ((SolicitanteViewModel)Session["Solicitante"]).Test = new OTest(); 
+            return RedirectToAction("Solicitante");
+        }
+
         [HttpPost]
         public ActionResult RealizarTest()
         {
@@ -69,15 +91,13 @@ namespace MVC.Controllers
                             if (respApi.Exitoso)
                             {
                                 OTest test = JsonConvert.DeserializeObject<OTest>(respApi.Respuesta[0].ToString());
-                                foreach(OPregunta pregunta in test.Preguntas)
+                                test.TiempoDisponible = 2700;
+                                foreach (OPregunta pregunta in test.Preguntas)
                                 {
                                     pregunta.Respuesta = Enumerable.Repeat(false, 4).ToList();
                                 }
                                 ((SolicitanteViewModel)Session["Solicitante"]).Test = test;
-                                DateTime endTime = DateTime.UtcNow.AddSeconds(2700);
-                                double tiempoRestante = TimeSpan.FromTicks(endTime.Ticks - DateTime.UtcNow.Ticks).TotalSeconds;
-                                TempData["TiempoTest"] = tiempoRestante;
-                                return View(Session["Solicitante"]);
+                                return RedirectToAction("Test");
                             }
                             else
                             {

@@ -216,3 +216,9 @@ a {
     background-color: #eee;
     color: #333;
 }
+
+.timer {
+    font-weight: bold;
+    font-size: 18px;
+    padding: 10px;
+}

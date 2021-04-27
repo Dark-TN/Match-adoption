@@ -12,6 +12,9 @@ namespace API.Models.Negocio.Test
         public List<OPregunta> Preguntas { get; set; }
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
+        public DateTime FechaLimite { get; set; }
+        public double TiempoRestante { get; set; }
+        public double TiempoDisponible { get; set; }
         public List<int> CalificacionesHabilidades { get; set; }
         public int IdEstiloCrianza { get; set; }
 
@@ -22,6 +25,9 @@ namespace API.Models.Negocio.Test
             this.Preguntas = new List<OPregunta>();
             this.FechaInicio = DateTime.MinValue;
             this.FechaFin = DateTime.MinValue;
+            this.FechaLimite = DateTime.MinValue;
+            this.TiempoRestante = 0.0;
+            this.TiempoDisponible = 0.0;
             this.CalificacionesHabilidades = new List<int>();
             this.IdEstiloCrianza = 0;
         }
