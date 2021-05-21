@@ -24,6 +24,8 @@ namespace MVC.Models.Negocio.Usuario
         public string CorreoElectronico { get; set; }
         public string Password { get; set; }
         public int IdCentroLaboral { get; set; }
+        public string NuevaPassword { get; set; }
+        public string ConfirmarPassword { get; set; }
 
         public OUsuario()
         {
@@ -42,6 +44,8 @@ namespace MVC.Models.Negocio.Usuario
             this.Password = string.Empty;
             this.IdCentroLaboral = 0;
             this.FechaIngreso = DateTime.MinValue;
+            this.NuevaPassword = string.Empty;
+            this.ConfirmarPassword = string.Empty;
         }
     }
 }

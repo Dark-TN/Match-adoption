@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using MVC.Models.ViewModels;
 using MVC.Models.Negocio.Test;
 using System.Text.RegularExpressions;
 
@@ -29,33 +28,143 @@ namespace MVC.Controllers
 
         public ActionResult Solicitante()
         {
+            Session["Test"] = null;
             if (TempData["Mensaje"] != null)
             {
                 ViewBag.Mensaje = TempData["Mensaje"].ToString();
             }
-            return View(Session["Solicitante"]);
+            return View(Session["Usuario"]);
+        }
+
+        [HttpPost]
+        public ActionResult SetTest()
+        {
+            return Json(((OTest)Session["Test"]).Preguntas);
+        }
+
+        [HttpPost]
+        public JsonResult DatosUsuario()
+        {
+            return Json((OUsuario)Session["Usuario"]);
+        }
+
+        [HttpPost]
+        public JsonResult ModificarDatosSolicitante(OUsuario PmtPeticion)
+        {
+            PmtPeticion.IdUsuario = ((OUsuario)Session["Usuario"]).IdUsuario;
+            return Json(PmtPeticion);
+        }
+
+        [HttpPost]
+        public ActionResult SetTimeTest()
+        {
+            if (((OTest)Session["Test"]).FechaInicio == DateTime.MinValue || ((OTest)Session["Test"]).FechaLimite == DateTime.MinValue)
+            {
+                ((OTest)Session["Test"]).FechaInicio = DateTime.Now;
+                ((OTest)Session["Test"]).FechaLimite = ((OTest)Session["Test"]).FechaInicio.AddSeconds(((OTest)Session["Test"]).TiempoDisponible);
+                ((OTest)Session["Test"]).TiempoRestante = TimeSpan.FromTicks(((OTest)Session["Test"]).FechaLimite.Ticks - ((OTest)Session["Test"]).FechaInicio.Ticks).TotalSeconds;
+            }
+            else
+            {
+                ((OTest)Session["Test"]).TiempoRestante = ((OTest)Session["Test"]).TiempoDisponible - TimeSpan.FromTicks((DateTime.Now.Ticks - ((OTest)Session["Test"]).FechaInicio.Ticks)).TotalSeconds;
+            }
+            return Json(((OTest)Session["Test"]).TiempoRestante);
         }
 
         public ActionResult Test()
         {
-            if (((SolicitanteViewModel)Session["Solicitante"]).Test.FechaInicio == DateTime.MinValue || ((SolicitanteViewModel)Session["Solicitante"]).Test.FechaLimite == DateTime.MinValue)
-            {
-                ((SolicitanteViewModel)Session["Solicitante"]).Test.FechaInicio = DateTime.Now.AddSeconds(2); //Se agregan 2 segundos para compensar el tiempo de respuesta 
-                ((SolicitanteViewModel)Session["Solicitante"]).Test.FechaLimite = ((SolicitanteViewModel)Session["Solicitante"]).Test.FechaInicio.AddSeconds(((SolicitanteViewModel)Session["Solicitante"]).Test.TiempoDisponible);
-                ((SolicitanteViewModel)Session["Solicitante"]).Test.TiempoRestante = TimeSpan.FromTicks(((SolicitanteViewModel)Session["Solicitante"]).Test.FechaLimite.Ticks - ((SolicitanteViewModel)Session["Solicitante"]).Test.FechaInicio.Ticks).TotalSeconds;
-            }
-            else
-            {
-                ((SolicitanteViewModel)Session["Solicitante"]).Test.TiempoRestante = ((SolicitanteViewModel)Session["Solicitante"]).Test.TiempoDisponible - TimeSpan.FromTicks((DateTime.Now.Ticks - ((SolicitanteViewModel)Session["Solicitante"]).Test.FechaInicio.Ticks)).TotalSeconds;
-            }
-            return View(Session["Solicitante"]);
+            return View(Session["Usuario"]);
         }
 
         [HttpPost]
-        public ActionResult ContestarTest(SolicitanteViewModel PmtPeticion)
+        public ActionResult ContestarTest(List<OPregunta> pmtPeticion)
         {
-            ((SolicitanteViewModel)Session["Solicitante"]).Test = new OTest();
-            return RedirectToAction("Solicitante");
+            ((OTest)Session["Test"]).FechaFin = DateTime.Now;
+            int Errores = 0;
+            string MensajeError = "Se encontraron los siguientes errores al validar su prueba:";
+            if(((OTest)Session["Test"]).FechaFin > ((OTest)Session["Test"]).FechaLimite)
+            {
+                MensajeError += "<br />La fecha del test presenta inconsistencias.";
+                Errores++;
+            }
+            if(pmtPeticion.Count < 189)
+            {
+                MensajeError += "<br />El número de preguntas recibidas presenta inconsistencias.";
+                Errores++;
+            }
+            foreach(OPregunta pregunta in pmtPeticion)
+            {
+                if(pregunta.IdPregunta > 189 || pregunta.IdPregunta <= 0)
+                {
+                    MensajeError += "<br />La pregunta número " + pregunta.IdPregunta.ToString() + " presenta inconsistencias.";
+                    Errores++;
+                }
+                if(pregunta.Respuesta > 4 || pregunta.Respuesta <= 0)
+                {
+                    MensajeError += "<br />La pregunta número " + pregunta.IdPregunta.ToString() + " presenta error en la respuesta.";
+                    Errores++;
+                }
+            }
+            if(Errores > 0)
+            {
+                TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>" + MensajeError + ".</center></label>');");
+                return Json(Url.Action("Solicitante", "Usuario"));
+            }
+            else
+            {
+                ((OTest)Session["Test"]).IdUsuario = ((OUsuario)Session["Usuario"]).IdUsuario;
+                ((OTest)Session["Test"]).Preguntas = pmtPeticion;
+                try
+                {
+                    var url = $"https://localhost:44335/api/Usuario/GuardarTest";
+                    var request = (HttpWebRequest)WebRequest.Create(url);
+                    string json = JsonConvert.SerializeObject(((OTest)Session["Test"]));
+                    request.Method = "POST";
+                    request.ContentType = "application/json";
+                    request.Accept = "application/json";
+                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    {
+                        streamWriter.Write(json);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+                    using (WebResponse response = request.GetResponse())
+                    {
+                        using (Stream strReader = response.GetResponseStream())
+                        {
+                            if (strReader == null)
+                            {
+                                TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El servidor no responde.</center></label>');");
+                                return Json(Url.Action("Solicitante", "Usuario"));
+                            }
+                            using (StreamReader objReader = new StreamReader(strReader))
+                            {
+                                string responseBody = objReader.ReadToEnd();
+                                ORespuesta respApi = JsonConvert.DeserializeObject<ORespuesta>(responseBody);
+                                if (respApi.Exitoso)
+                                {
+                                    TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Se guardó la prueba correctamente.</center></label>');");
+                                }
+                                else
+                                {
+                                    TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>" + respApi.Mensaje + "</center></label>');");
+                                }
+                                return Json(Url.Action("Solicitante", "Usuario"));
+                            }
+                        }
+                    }
+                }
+                catch (WebException ex)
+                {
+                    TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>" + ex.Message + ".</center></label>');");
+                    return Json(Url.Action("Solicitante", "Usuario"));
+                }
+                catch (Exception e)
+                {
+                    TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>" + e.Message + ".</center></label>');");
+                    return Json(Url.Action("Solicitante", "Usuario"));
+                }
+            }
         }
 
         [HttpPost]
@@ -65,7 +174,7 @@ namespace MVC.Controllers
             {
                 var url = $"https://localhost:44335/api/Usuario/ListarPreguntas";
                 var request = (HttpWebRequest)WebRequest.Create(url);
-                string json = JsonConvert.SerializeObject(((SolicitanteViewModel)Session["Solicitante"]).Usuario);
+                string json = JsonConvert.SerializeObject(((OUsuario)Session["Usuario"]));
                 request.Method = "POST";
                 request.ContentType = "application/json";
                 request.Accept = "application/json";
@@ -92,11 +201,7 @@ namespace MVC.Controllers
                             {
                                 OTest test = JsonConvert.DeserializeObject<OTest>(respApi.Respuesta[0].ToString());
                                 test.TiempoDisponible = 2700;
-                                foreach (OPregunta pregunta in test.Preguntas)
-                                {
-                                    pregunta.Respuesta = Enumerable.Repeat(false, 4).ToList();
-                                }
-                                ((SolicitanteViewModel)Session["Solicitante"]).Test = test;
+                                Session["Test"] = test;
                                 return RedirectToAction("Test");
                             }
                             else
@@ -111,11 +216,13 @@ namespace MVC.Controllers
             catch (WebException ex)
             {
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>" + ex.Message + ".</center></label>');");
+                TempData.Keep("Mensaje");
                 return RedirectToAction("Solicitante");
             }
             catch (Exception e)
             {
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>" + e.Message + ".</center></label>');");
+                TempData.Keep("Mensaje");
                 return RedirectToAction("Solicitante");
             }
         }
@@ -128,7 +235,7 @@ namespace MVC.Controllers
             Response.Cookies.Clear();
             Session.Clear();
             Session.RemoveAll();
-            Session["Solicitante"] = null;
+            Session["Usuario"] = null;
             return RedirectToAction("Index", "Principal");
         }
 
@@ -177,9 +284,7 @@ namespace MVC.Controllers
                                 }
                                 else
                                 {
-                                    SolicitanteViewModel solicitante = new SolicitanteViewModel();
-                                    solicitante.Usuario = sessionUser;
-                                    Session["Solicitante"] = solicitante;
+                                    Session["Usuario"] = sessionUser;
                                     return RedirectToAction("Solicitante");
                                 }
                             }
@@ -212,23 +317,28 @@ namespace MVC.Controllers
                 int.Parse(formCollection["sctEstadoCivil"]) == 0 || string.IsNullOrEmpty(formCollection["txtCorreoRegistroUsuario"]) ||
                 int.Parse(formCollection["sctNivelEstudios"]) == 0 || string.IsNullOrEmpty(formCollection["txtOcupacion"]) ||
                 string.IsNullOrEmpty(formCollection["txtDireccion"]) || string.IsNullOrEmpty(formCollection["txtTelefonoUsuario"]) ||
-                string.IsNullOrEmpty(formCollection["txtPasswordRegistroUsuario"]))
+                string.IsNullOrEmpty(formCollection["txtPasswordRegistroUsuario"]) || string.IsNullOrEmpty(formCollection["txtConfirmarPasswordRegistroUsuario"]))
             {
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Asegurate de llenar todos los campos correctamente.</center></label>');");
                 return RedirectToAction("Index", "Principal");
             }
-            Match m = Regex.Match(formCollection["txtCURPUsuario"], @"^[a-zA-Z]{3,4}[0-9]{6}[hmHM]{1}[a-zA-Z]{1,2}[a-zA-z]{3}[0-9]{2}$", RegexOptions.IgnoreCase);
-            if (m.Success==false)
-            {
+           
+            if (CurpValida(formCollection["txtCURPUsuario"]) != true) {
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El formato del CURP es incorrecto.</center></label>');");
                 return RedirectToAction("Index", "Principal");
             }
-            m = Regex.Match(formCollection["txtNombreUsuario"], @"^([a-zA-ZñÑ\s]*){0,150}$", RegexOptions.IgnoreCase);
+            Match m = Regex.Match(formCollection["txtNombreUsuario"], @"^([a-zA-ZñÑ\s]*){0,150}$", RegexOptions.IgnoreCase);
             if (m.Success==false)
             {
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El formato del nombre es incorrecto.</center></label>');");
                 return RedirectToAction("Index", "Principal");
             }
+            if (!formCollection["txtPasswordRegistroUsuario"].Equals(formCollection["txtConfirmarPasswordRegistroUsuario"]))
+            {
+                TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Las contraseñas no coinciden.</center></label>');");
+                return RedirectToAction("Index", "Principal");
+            }
+         
             string secretKey = System.Web.Configuration.WebConfigurationManager.AppSettings["reCaptchaPrivateKey"];
             OReCaptcha reCaptcha;
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + formCollection["g-recaptcha-response"]);
@@ -285,7 +395,8 @@ namespace MVC.Controllers
                                 if (respApi.Exitoso)
                                 {
                                     OUsuario sessionUser = JsonConvert.DeserializeObject<OUsuario>(respApi.Respuesta[0].ToString());
-                                   
+                                    Session["Usuario"] = sessionUser;
+                                    return RedirectToAction("Solicitante");
                                 }
                                 else
                                 {
@@ -314,7 +425,6 @@ namespace MVC.Controllers
             }
         }
 
-
         [HttpPost]
         public ActionResult RegistroEmpleado(FormCollection formCollection)
         {
@@ -322,7 +432,7 @@ namespace MVC.Controllers
                 DateTime.Parse(formCollection["dtFechaIngreso"]) == DateTime.MinValue || int.Parse(formCollection["sctCentroLabores"]) == 0 ||
                 string.IsNullOrEmpty(formCollection["txtTelefonoEmpleado"]) || string.IsNullOrEmpty(formCollection["txtCorreoRegistroEmpleado"]) ||
                 string.IsNullOrEmpty(formCollection["txtPasswordRegistroEmpleado"]) || string.IsNullOrEmpty(formCollection["txtConfirmarPasswordRegistroEmpleado"]) ||
-                int.Parse(formCollection["sctSexoUsuario2"]) == 0 
+                int.Parse(formCollection["sctSexoUsuario2"]) == 0
                 )
             {
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Asegurate de llenar todos los campos correctamente.</center></label>');");
@@ -334,15 +444,21 @@ namespace MVC.Controllers
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El formato del CURP es incorrecto.</center></label>');");
                 Console.WriteLine("No entró");
                 return RedirectToAction("Index", "Principal");
-            } 
+            }
             char[] MyChar = { '_' };
             Debug.WriteLine(formCollection["txtNombreEmpleado"].TrimEnd(MyChar));
-           
+
             Match m = Regex.Match(formCollection["txtNombreEmpleado"].TrimEnd(MyChar), @"^([a-zA-ZñÑ\s]*){0,150}$", RegexOptions.IgnoreCase);
             Debug.WriteLine(m.Success);
             if (m.Success != true)
             {
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El formato del nombre es incorrecto.</center></label>');");
+                return RedirectToAction("Index", "Principal");
+            }
+
+            if (!formCollection["txtPasswordRegistroEmpleado"].Equals(formCollection["txtConfirmarPasswordRegistroEmpleado"]))
+            {
+                TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Las contraseñas no coinciden.</center></label>');");
                 return RedirectToAction("Index", "Principal");
             }
 

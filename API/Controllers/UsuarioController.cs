@@ -1,4 +1,5 @@
 ﻿using API.Models.Data;
+using API.Models.Negocio.Test;
 using API.Models.Negocio.Usuario;
 using API.Models.Peticion;
 using System;
@@ -46,6 +47,14 @@ namespace API.Controllers
         public IHttpActionResult RegistroEmpleado(OUsuario PmtPeticion)
         {
             ORespuesta res = _D.RegistroEmpleado(PmtPeticion);
+            return Json(res);
+        }
+
+        [HttpPost]
+        [ActionName("GuardarTest")]
+        public IHttpActionResult GuardarTest(OTest PmtPeticion)
+        {
+            ORespuesta res = _D.GuardarTest(PmtPeticion);
             return Json(res);
         }
     }

@@ -5,9 +5,6 @@
     ViewBag.Title = "Match Adoption";
     Layout = "~/Views/Shared/_MasterInicio.cshtml";
 }
-<script type="text/javascript">
-    var urlRegistroSolicitante = '@Url.Action("RegistroSolicitante", "Usuario")';
-</script>
 <script type="text/javascript" src="~/Scripts/Pagina/Principal/Principal.js"></script>
 
 <script type="text/javascript">
@@ -19,26 +16,39 @@
     <h2>Descúbrelo</h2>
 </div>
 
-<div class="boxSlider">
-    <div class="slider">
-        <ul class="slider-parent">
-            <li class="images-list" data-slider="1"></li>
-            <li class="images-list" data-slider="2"></li>
-            <li class="images-list" data-slider="3"></li>
-            <li class="images-list" data-slider="4"></li>
-            <li class="images-list" data-slider="5"></li>
-            <li class="images-list" data-slider="6"></li>
-        </ul>
-        <ol class="buttom-circles">
-            <li class="buttom-circles-list slider-active" data-slider="1"><i class="fa fa-circle-thin"></i></li>
-            <li class="buttom-circles-list" data-slider="2"><i class="fa fa-circle-thin"></i></li>
-            <li class="buttom-circles-list" data-slider="3"><i class="fa fa-circle-thin"></i></li>
-            <li class="buttom-circles-list" data-slider="4"><i class="fa fa-circle-thin"></i></li>
-            <li class="buttom-circles-list" data-slider="5"><i class="fa fa-circle-thin"></i></li>
-            <li class="buttom-circles-list" data-slider="6"></li>
-        </ol>
-        <i class="fa fa-chevron-right fa-5x"></i>
-        <i class="fa fa-chevron-left fa-5x"></i>
+<div class="row center">
+    <div class="col-sm-12">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="~/Recursos/Imagenes/ejemplo.png" alt="">
+                </div>
+                <div class="item">
+                    <img src="~/Recursos/Imagenes/logo.png" alt="">
+                </div>
+                <div class="item">
+                    <img src="~/Recursos/Imagenes/logo_letras.png" alt="">
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
     </div>
 </div>
 
@@ -100,61 +110,65 @@
                     <div class="tab-pane active" id="1a">
                         @using (Html.BeginForm("RegistroSolicitante", "Usuario", FormMethod.Post))
                         {
-                            <div class="row row-form">
-                                <div class="col-sm-4">
-                                    <label>CURP:</label>
-                                    <input type="text" class="form-control CURP" name="txtCURPUsuario" required />
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Nombre:</label>
-                                    <input type="text" class="form-control Alfa" name="txtNombreUsuario" required />
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Fecha de nacimiento:</label>
-                                    <input type="text" class="form-control datepicker Fecha" name="dtFechaNacimientoUsuario" required />
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Sexo:</label>
-                                    <select class="form-control" name="sctSexoUsuario" id="sctSexoUsuario" required>
-                                        <option value="0">Selecciona una opción</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Estado civil:</label>
-                                    <select class="form-control" name="sctEstadoCivil" id="sctEstadoCivil" required>
-                                        <option value="0">Selecciona una opción</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Nivel de estudios:</label>
-                                    <select class="form-control" name="sctNivelEstudios" id="sctNivelEstudios" required>
-                                        <option value="0">Selecciona una opción</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Ocupación:</label>
-                                    <input type="text" class="form-control Alfa" name="txtOcupacion" required />
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Dirección:</label>
-                                    <input type="text" class="form-control Alfanumerico" name="txtDireccion" required />
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Teléfono:</label>
-                                    <input type="text" class="form-control Telefono" name="txtTelefonoUsuario" required />
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Correo electr&oacute;nico:</label>
-                                    <input type="text" class="form-control Correo" name="txtCorreoRegistroUsuario" required />
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Contraseña:</label>
-                                    <input type="password" class="form-control" name="txtPasswordRegistroUsuario" required />
-                                </div>
-                                <div class="col-sm-12 reCaptchaContainer">
-                                    <div class="g-recaptcha" data-sitekey="6LftBosaAAAAAO6f9mxfmfcbPFIlVfl57uC23dJZ"></div>
-                                </div>
+                        <div class="row row-form">
+                            <div class="col-sm-4">
+                                <label>CURP:</label>
+                                <input type="text" class="form-control CURP" name="txtCURPUsuario" required />
                             </div>
+                            <div class="col-sm-4">
+                                <label>Nombre:</label>
+                                <input type="text" class="form-control Alfa" name="txtNombreUsuario" required />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Fecha de nacimiento:</label>
+                                <input type="text" class="form-control datepicker Fecha" name="dtFechaNacimientoUsuario" required />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Sexo:</label>
+                                <select class="form-control" name="sctSexoUsuario" id="sctSexoUsuario" required>
+                                    <option value="0">Selecciona una opción</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Estado civil:</label>
+                                <select class="form-control" name="sctEstadoCivil" id="sctEstadoCivil" required>
+                                    <option value="0">Selecciona una opción</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Nivel de estudios:</label>
+                                <select class="form-control" name="sctNivelEstudios" id="sctNivelEstudios" required>
+                                    <option value="0">Selecciona una opción</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Ocupación:</label>
+                                <input type="text" class="form-control Alfa" name="txtOcupacion" required />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Dirección:</label>
+                                <input type="text" class="form-control Alfanumerico" name="txtDireccion" required />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Teléfono:</label>
+                                <input type="text" class="form-control Telefono" name="txtTelefonoUsuario" required />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Correo electr&oacute;nico:</label>
+                                <input type="text" class="form-control Correo" name="txtCorreoRegistroUsuario" required />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Contraseña:</label>
+                                <input type="password" class="form-control" name="txtPasswordRegistroUsuario" required />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Confirmar contraseña:</label>
+                                <input type="password" class="form-control" name="txtConfirmarPasswordRegistroUsuario" required />
+                            </div>
+                            <div class="col-sm-12 reCaptchaContainer">
+                                <div class="g-recaptcha" data-sitekey="6LftBosaAAAAAO6f9mxfmfcbPFIlVfl57uC23dJZ"></div>
+                            </div>
+                        </div>
                             <div class="row row-form">
                                 <div class="col-sm-12 text-center">
                                     <label>¿Ya tienes una cuenta? <a data-dismiss="modal" data-toggle ="modal" href="#modal-login">Inicia sesi&oacute;n</a>.</label>

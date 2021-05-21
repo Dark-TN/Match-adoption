@@ -231,6 +231,11 @@ function registroEmpleado() {
 }
 
 $(document).ready(function () {
+    $('.carousel').carousel({
+        interval: 5000,
+        pause: true,
+        wrap: true
+    });
     $("#dtFechaNacimientoUsuario").datepicker({
         autoclose: true,
         todayHighlight: true,
