@@ -14,9 +14,11 @@ namespace API.Models.Negocio.Usuario
         public string CURP { get; set; }
         public string Nombre { get; set; }
         public DateTime FechaNacimiento { get; set; }
+        public DateTime FechaIngreso { get; set; }
         public int IdSexo { get; set; }
         public int IdEstadoCivil { get; set; }
         public int IdNivelEstudios { get; set; }
+        public int IdCentroLaboral { get; set; }
         public string Ocupacion { get; set; }
         public string Direccion { get; set; }
         public string Telefono { get; set; }
@@ -25,6 +27,7 @@ namespace API.Models.Negocio.Usuario
         public string Password { get; set; }
         public string PasswordEncriptada { get; set; }
         public string PasswordPrivada { get; set; }
+        public string CentrosLaborales { get; set; }
 
         public OUsuario()
         {
@@ -33,9 +36,11 @@ namespace API.Models.Negocio.Usuario
             this.CURP = string.Empty;
             this.Nombre = string.Empty;
             this.FechaNacimiento = DateTime.MinValue;
+            this.FechaIngreso = DateTime.MinValue;
             this.IdSexo = 0;
             this.IdEstadoCivil = 0;
             this.IdNivelEstudios = 0;
+            this.IdCentroLaboral = 0;
             this.Ocupacion = string.Empty;
             this.Direccion = string.Empty;
             this.Telefono = string.Empty;
@@ -44,6 +49,7 @@ namespace API.Models.Negocio.Usuario
             this.Password = string.Empty;
             this.PasswordEncriptada = string.Empty;
             this.PasswordPrivada = string.Empty;
+            this.CentrosLaborales = string.Empty;
         }
 
         public void GenerarPasswordPrivada()

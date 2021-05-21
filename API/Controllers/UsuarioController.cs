@@ -40,5 +40,13 @@ namespace API.Controllers
             ORespuesta res = _D.ListarPreguntas(PmtPeticion);
             return Json(res);
         }
+
+        [HttpPost]
+        [ActionName("RegistroEmpleado")]
+        public IHttpActionResult RegistroEmpleado(OUsuario PmtPeticion)
+        {
+            ORespuesta res = _D.RegistroEmpleado(PmtPeticion);
+            return Json(res);
+        }
     }
 }

@@ -110,6 +110,30 @@ function selectCatalogoSexo() {
                         text: data.Respuesta[i].Descripcion
                     }));
                 }
+                $("#sctSexoUsuario2").children('option:not(:first)').remove();
+                for (i = 0; i < data.Respuesta.length; i++) {
+                    $("#sctSexoUsuario2").append($('<option>', {
+                        value: data.Respuesta[i].Id,
+                        text: data.Respuesta[i].Descripcion
+                    }));
+                }
+            }
+        });
+}
+
+function selectCatalogCentrosLaborales() {
+    $.ajax
+        ({
+            type: 'POST',
+            url: "https://localhost:44335/api/Catalogo/ListarCatalogoCentrosAdopcion",
+            success: function (data) {
+                $("#sctCentroLabores").children('option:not(:first)').remove();
+                for (i = 0; i < data.Respuesta.length; i++) {
+                    $("#sctCentroLabores").append($('<option>', {
+                        value: data.Respuesta[i].Id,
+                        text: data.Respuesta[i].Descripcion
+                    }));
+                }
             }
         });
 }
@@ -179,6 +203,33 @@ function registroSolicitante() {
         });
 }
 
+function registroEmpleado() {
+    var pmtPeticion = new Object();
+    pmtPeticion.CURP = $("#txtCURPEmpleado").val();
+    pmtPeticion.Nombre = $("#txtNombreEmpleado").val();
+    pmtPeticion.FechaNacimiento = $("#dtFechaIngreso").val();
+    pmtPeticion.IdSexo = $("#sctSexoUsuario2 option:selected").val();
+    ptmPeticion.IdCentroLaboral = $("sctCentroLabores option:selected").val();
+    pmtPeticion.Telefono = $("#txtTelefonoEmpleado").val();
+    pmtPeticion.CorreoElectronico = $("#txtCorreoRegistroEmpleado").val();
+    pmtPeticion.Password = $("#txtPasswordRegistroUsuario").val();
+    $.ajax
+        ({
+            type: 'POST',
+            data: { PmtPeticion: pmtPeticion, ReCaptchaResponse: grecaptcha.getResponse() },
+            url: urlRegistroSolicitante,
+            beforeSend: function () {
+                MensajeCargando();
+            },
+            success: function (data) {
+                bootbox.hideAll();
+                if (data.Exitoso === false) {
+                    bootbox.alert(data.Mensaje);
+                }
+            }
+        });
+}
+
 $(document).ready(function () {
     $("#dtFechaNacimientoUsuario").datepicker({
         autoclose: true,
@@ -188,4 +239,6 @@ $(document).ready(function () {
     selectCatalogoSexo();
     selectCatalogoEstadoCivil();
     selectCatalogoNivelEstudios();
+    selectCatalogCentrosLaborales();
+
 });

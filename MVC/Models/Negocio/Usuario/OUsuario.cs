@@ -14,6 +14,7 @@ namespace MVC.Models.Negocio.Usuario
         public string CURP { get; set; }
         public string Nombre { get; set; }
         public DateTime FechaNacimiento { get; set; }
+        public DateTime FechaIngreso { get; set; }
         public int IdSexo { get; set; }
         public int IdEstadoCivil { get; set; }
         public int IdNivelEstudios { get; set; }
@@ -22,6 +23,7 @@ namespace MVC.Models.Negocio.Usuario
         public string Telefono { get; set; }
         public string CorreoElectronico { get; set; }
         public string Password { get; set; }
+        public int IdCentroLaboral { get; set; }
 
         public OUsuario()
         {
@@ -38,6 +40,8 @@ namespace MVC.Models.Negocio.Usuario
             this.Telefono = string.Empty;
             this.CorreoElectronico = string.Empty;
             this.Password = string.Empty;
+            this.IdCentroLaboral = 0;
+            this.FechaIngreso = DateTime.MinValue;
         }
     }
 }
