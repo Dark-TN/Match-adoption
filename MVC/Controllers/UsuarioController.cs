@@ -285,10 +285,7 @@ namespace MVC.Controllers
                                 if (respApi.Exitoso)
                                 {
                                     OUsuario sessionUser = JsonConvert.DeserializeObject<OUsuario>(respApi.Respuesta[0].ToString());
-                                    SolicitanteViewModel solicitante = new SolicitanteViewModel();
-                                    solicitante.Usuario = sessionUser;
-                                    Session["Solicitante"] = solicitante;
-                                    return RedirectToAction("Solicitante");
+                                   
                                 }
                                 else
                                 {
