@@ -22,6 +22,8 @@ namespace MVC.Models.Negocio.Usuario
         public string Telefono { get; set; }
         public string CorreoElectronico { get; set; }
         public string Password { get; set; }
+        public string NuevaPassword { get; set; }
+        public string ConfirmarPassword { get; set; }
 
         public OUsuario()
         {
@@ -38,6 +40,8 @@ namespace MVC.Models.Negocio.Usuario
             this.Telefono = string.Empty;
             this.CorreoElectronico = string.Empty;
             this.Password = string.Empty;
+            this.NuevaPassword = string.Empty;
+            this.ConfirmarPassword = string.Empty;
         }
     }
 }

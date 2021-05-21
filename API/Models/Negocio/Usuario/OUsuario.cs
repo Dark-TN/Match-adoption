@@ -25,6 +25,8 @@ namespace API.Models.Negocio.Usuario
         public string Password { get; set; }
         public string PasswordEncriptada { get; set; }
         public string PasswordPrivada { get; set; }
+        public string NuevaPassword { get; set; }
+        public string ConfirmarPassword { get; set; }
 
         public OUsuario()
         {
@@ -44,6 +46,8 @@ namespace API.Models.Negocio.Usuario
             this.Password = string.Empty;
             this.PasswordEncriptada = string.Empty;
             this.PasswordPrivada = string.Empty;
+            this.NuevaPassword = string.Empty;
+            this.ConfirmarPassword = string.Empty;
         }
 
         public void GenerarPasswordPrivada()

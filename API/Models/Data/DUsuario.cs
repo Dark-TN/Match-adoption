@@ -199,7 +199,7 @@ namespace API.Models.Data
                 {
                     if (ds.Tables[0].Rows.Count == 1)
                     {
-                        int _Dato = int.Parse(ds.Tables[0].Rows[0]["reuslt"].ToString());
+                        int _Dato = int.Parse(ds.Tables[0].Rows[0]["result"].ToString());
                         Ls.Exitoso = false;
                         if (_Dato == 1)
                         {
@@ -222,11 +222,157 @@ namespace API.Models.Data
                             _Dato.Pregunta = row["pregunta"].ToString();
                             test.Preguntas.Add(_Dato);
                         }
+                        Ls.Exitoso = true;
                         Ls.Respuesta.Add(test);
                     }
                 }
-                Ls.Exitoso = true;
                 return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+        public ORespuesta GuardarTest(OTest PmtPeticion)
+        {
+            ORespuesta Ls = new ORespuesta();
+            try
+            {
+                int Errores = 0;
+                string MensajeError = "Se encontraron los siguientes errores al validar su prueba:";
+                if (PmtPeticion.FechaFin > PmtPeticion.FechaLimite)
+                {
+                    MensajeError += "<br />La fecha del test presenta inconsistencias.";
+                    Errores++;
+                }
+                if (PmtPeticion.Preguntas.Count < 189)
+                {
+                    MensajeError += "<br />El número de preguntas recibidas presenta inconsistencias.";
+                    Errores++;
+                }
+                foreach (OPregunta pregunta in PmtPeticion.Preguntas)
+                {
+                    if (pregunta.IdPregunta > 189 || pregunta.IdPregunta <= 0)
+                    {
+                        MensajeError += "<br />La pregunta número " + pregunta.IdPregunta.ToString() + " presenta inconsistencias.";
+                        Errores++;
+                    }
+                    if (pregunta.Respuesta > 4 || pregunta.Respuesta <= 0)
+                    {
+                        MensajeError += "<br />La pregunta número " + pregunta.IdPregunta.ToString() + " presenta error en la respuesta.";
+                        Errores++;
+                    }
+                }
+                if (Errores > 0)
+                {
+                    Ls.Exitoso = false;
+                    Ls.Mensaje = MensajeError;
+                }
+                else
+                {
+                    Hashtable Parametros = new Hashtable()
+                    {
+                        {"@idUsuario", PmtPeticion.IdUsuario},
+                        {"@fechaInicio", PmtPeticion.FechaInicio },
+                        {"@fechaFin", PmtPeticion.FechaFin }
+                    };
+                    DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_insert_test", Parametros, cadenaConexionLocal);
+                    if (ds.Tables.Count > 0)
+                    {
+                        if (ds.Tables[0].Rows.Count > 0)
+                        {
+                            int _Dato = int.Parse(ds.Tables[0].Rows[0]["result"].ToString());
+                            Ls.Exitoso = false;
+                            if (_Dato == -1)
+                            {
+                                Ls.Mensaje = "Has alcanzado el número máximo de intentos.";
+                            }
+                            else  if(_Dato == -2)
+                            {
+                                Ls.Mensaje = "Debes esperar al menos 3 meses a partir de la fecha de término de tu último test para poder realizar otro intento.";
+                            }
+                            else
+                            {
+                                PmtPeticion.IdTest = _Dato;
+                                foreach (OPregunta pregunta in PmtPeticion.Preguntas)
+                                {
+                                    Parametros = new Hashtable()
+                                    {
+                                        {"@idTest", PmtPeticion.IdUsuario},
+                                        {"@idPregunta", pregunta.IdPregunta },
+                                        {"@respuesta", pregunta.Respuesta }
+                                    };
+                                    ds = DB.EjecutaProcedimientoAlmacenado("sp_insert_respuestas_test", Parametros, cadenaConexionLocal);
+                                }
+                                Ls.Exitoso = true;
+                            }
+                        }
+                    }
+                }
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+        public ORespuesta ModificarSolicitante(OUsuario PmtPeticion)
+        {
+            ORespuesta Ls = new ORespuesta();
+            try
+            {
+                if (string.IsNullOrEmpty(PmtPeticion.Nombre) || string.IsNullOrEmpty(PmtPeticion.Nombre) ||
+                PmtPeticion.FechaNacimiento == DateTime.MinValue || PmtPeticion.IdSexo == 0 ||
+                PmtPeticion.IdEstadoCivil == 0 || string.IsNullOrEmpty(PmtPeticion.CorreoElectronico) ||
+                PmtPeticion.IdNivelEstudios == 0 || string.IsNullOrEmpty(PmtPeticion.Ocupacion) ||
+                string.IsNullOrEmpty(PmtPeticion.Direccion) || string.IsNullOrEmpty(PmtPeticion.Telefono) ||
+                string.IsNullOrEmpty(PmtPeticion.Password))
+                {
+                    Ls.Exitoso = false;
+                    Ls.Mensaje = "Asegurate de llenar todos los datos correctamente";
+                    return Ls;
+                }
+                if (!PmtPeticion.NuevaPassword.Equals(PmtPeticion.ConfirmarPassword))
+                {
+                    Ls.Exitoso = false;
+                    Ls.Mensaje = "Las contraseñas no coinciden";
+                    return Ls;
+                }
+                Hashtable Parametros = new Hashtable()
+                {
+                    {"@idUsuario", PmtPeticion.IdUsuario}
+                };
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_user_password", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        OUsuario user = new OUsuario();
+                        user.PasswordEncriptada = ds.Tables[0].Rows[0]["password"].ToString();
+                        user.PasswordPrivada = ds.Tables[0].Rows[0]["passwordPrivada"].ToString();
+              
+                            Ls.Exitoso = true;
+                    }
+                }
+            return Ls;
             }
             catch (SqlException e)
             {

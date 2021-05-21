@@ -10,14 +10,14 @@ namespace API.Models.Negocio.Test
         public int IdPregunta { get; set; }
         public string Pregunta { get; set; }
         public int IdHabilidad {get;set;}
-        public List<bool> Respuesta { get; set; }
+        public int Respuesta { get; set; }
 
         public OPregunta()
         {
             this.IdPregunta = 0;
             this.Pregunta = string.Empty;
             this.IdHabilidad = 0;
-            this.Respuesta = new List<bool>();
+            this.Respuesta = 0;
         }
     }
 }

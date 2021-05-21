@@ -177,7 +177,6 @@
     <Compile Include="Models\Negocio\Usuario\OUsuario.cs" />
     <Compile Include="Models\Peticion\OReCaptcha.cs" />
     <Compile Include="Models\Peticion\ORespuesta.cs" />
-    <Compile Include="Models\ViewModels\SolicitanteViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -362,10 +361,9 @@
     <Content Include="Scripts\Pagina\Usuario\Administrador.js" />
     <Content Include="Scripts\Pagina\Usuario\Alumno.js" />
     <Content Include="Scripts\Pagina\Usuario\Coordinador.js" />
+    <Content Include="Scripts\Pagina\Usuario\MasterSolicitante.js" />
     <Content Include="Scripts\Pagina\Usuario\Test.js" />
     <Content Include="Scripts\Pagina\Usuario\Usuario.js" />
-    <Content Include="Scripts\QRCode\qrcode.js" />
-    <Content Include="Scripts\QRCode\qrcode.min.js" />
     <Content Include="Scripts\Utilidades\DataTables.js" />
     <Content Include="Scripts\Utilidades\Fechas.js" />
     <Content Include="Scripts\Utilidades\Formatos.js" />
