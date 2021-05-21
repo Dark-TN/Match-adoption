@@ -92,6 +92,43 @@ namespace API.Models.Data
             }
         }
 
+        public ORespuesta ListarCatalogoCentrosAdopcion()
+        {
+            ORespuesta Ls = new ORespuesta();
+            try
+            {
+                Hashtable Parametros = new Hashtable();
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_lista_cat_centros_laborales", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        foreach (DataRow row in ds.Tables[0].Rows)
+                        {
+                            OCatalogo _Dato = new OCatalogo();
+                            _Dato.Id = int.Parse(row["idCentroAdopcion"].ToString());
+                            _Dato.Descripcion = row["nombre"].ToString();
+                            Ls.Respuesta.Add(_Dato);
+                        }
+                    }
+                }
+                Ls.Exitoso = true;
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
         public ORespuesta ListarCatalogoNivelEstudios()
         {
             ORespuesta Ls = new ORespuesta();

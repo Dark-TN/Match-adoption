@@ -37,5 +37,12 @@ namespace API.Controllers
             ORespuesta res = _D.ListarCatalogoNivelEstudios();
             return Json(res);
         }
+        [HttpPost]
+        [ActionName("ListarCatalogoCentrosAdopcion")]
+        public IHttpActionResult ListarCatalogoCentrosAdopcion()
+        {
+            ORespuesta res = _D.ListarCatalogoCentrosAdopcion();
+            return Json(res);
+        }
     }
 }

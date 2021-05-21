@@ -322,23 +322,23 @@ namespace MVC.Controllers
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Asegurate de llenar todos los campos correctamente.</center></label>');");
                 return RedirectToAction("Index", "Principal");
             }
+           
+            if (CurpValida(formCollection["txtCURPUsuario"]) != true) {
+                TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El formato del CURP es incorrecto.</center></label>');");
+                return RedirectToAction("Index", "Principal");
+            }
+            Match m = Regex.Match(formCollection["txtNombreUsuario"], @"^([a-zA-ZñÑ\s]*){0,150}$", RegexOptions.IgnoreCase);
+            if (m.Success==false)
+            {
+                TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El formato del nombre es incorrecto.</center></label>');");
+                return RedirectToAction("Index", "Principal");
+            }
             if (!formCollection["txtPasswordRegistroUsuario"].Equals(formCollection["txtConfirmarPasswordRegistroUsuario"]))
             {
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Las contraseñas no coinciden.</center></label>');");
                 return RedirectToAction("Index", "Principal");
             }
-            //Match m = Regex.Match(formCollection["txtCURPUsuario"], @"^[a-zA-Z]{3,4}[0-9]{6}[hmHM]{1}[a-zA-Z]{1,2}[a-zA-z]{3}[0-9]{2}$", RegexOptions.IgnoreCase);
-            //if (!m.Success)
-            //{
-            //    TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El formato del CURP es incorrecto.</center></label>');");
-            //    return RedirectToAction("Index", "Principal");
-            //}
-            //m = Regex.Match(formCollection["txtNombreUsuario"], @"[a-zA-ZñÑ ]{150}", RegexOptions.IgnoreCase);
-            //if (!m.Success)
-            //{
-            //    TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El formato del nombre es incorrecto.</center></label>');");
-            //    return RedirectToAction("Index", "Principal");
-            //}
+         
             string secretKey = System.Web.Configuration.WebConfigurationManager.AppSettings["reCaptchaPrivateKey"];
             OReCaptcha reCaptcha;
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + formCollection["g-recaptcha-response"]);
@@ -424,5 +424,155 @@ namespace MVC.Controllers
                 return RedirectToAction("Index", "Principal");
             }
         }
-    }
+
+        [HttpPost]
+        public ActionResult RegistroEmpleado(FormCollection formCollection)
+        {
+            if (string.IsNullOrEmpty(formCollection["txtCURPEmpleado"]) || string.IsNullOrEmpty(formCollection["txtNombreEmpleado"]) ||
+                DateTime.Parse(formCollection["dtFechaIngreso"]) == DateTime.MinValue || int.Parse(formCollection["sctCentroLabores"]) == 0 ||
+                string.IsNullOrEmpty(formCollection["txtTelefonoEmpleado"]) || string.IsNullOrEmpty(formCollection["txtCorreoRegistroEmpleado"]) ||
+                string.IsNullOrEmpty(formCollection["txtPasswordRegistroEmpleado"]) || string.IsNullOrEmpty(formCollection["txtConfirmarPasswordRegistroEmpleado"]) ||
+                int.Parse(formCollection["sctSexoUsuario2"]) == 0
+                )
+            {
+                TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Asegurate de llenar todos los campos correctamente.</center></label>');");
+                return RedirectToAction("Index", "Principal");
+            }
+
+            if (CurpValida(formCollection["txtCURPEmpleado"]) == false)
+            {
+                TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El formato del CURP es incorrecto.</center></label>');");
+                Console.WriteLine("No entró");
+                return RedirectToAction("Index", "Principal");
+            }
+            char[] MyChar = { '_' };
+            Debug.WriteLine(formCollection["txtNombreEmpleado"].TrimEnd(MyChar));
+
+            Match m = Regex.Match(formCollection["txtNombreEmpleado"].TrimEnd(MyChar), @"^([a-zA-ZñÑ\s]*){0,150}$", RegexOptions.IgnoreCase);
+            Debug.WriteLine(m.Success);
+            if (m.Success != true)
+            {
+                TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El formato del nombre es incorrecto.</center></label>');");
+                return RedirectToAction("Index", "Principal");
+            }
+
+            if (!formCollection["txtPasswordRegistroEmpleado"].Equals(formCollection["txtConfirmarPasswordRegistroEmpleado"]))
+            {
+                TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Las contraseñas no coinciden.</center></label>');");
+                return RedirectToAction("Index", "Principal");
+            }
+
+            string secretKey = System.Web.Configuration.WebConfigurationManager.AppSettings["reCaptchaPrivateKey"];
+            OReCaptcha reCaptcha;
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + formCollection["g-recaptcha-response"]);
+            using (WebResponse wResponse = req.GetResponse())
+            {
+                using (StreamReader readStream = new StreamReader(wResponse.GetResponseStream()))
+                {
+                    string response = readStream.ReadToEnd();
+                    reCaptcha = JsonConvert.DeserializeObject<OReCaptcha>(response);
+
+                }
+            }
+            if (reCaptcha.Success)
+            {
+                OUsuario user = new OUsuario();
+                user.CURP = formCollection["txtCURPEmpleado"];
+                user.Nombre = formCollection["txtNombreEmpleado"].TrimEnd(MyChar);
+                user.FechaIngreso = DateTime.Parse(formCollection["dtFechaIngreso"]);
+                user.IdSexo = int.Parse(formCollection["sctSexoUsuario2"]);
+                user.CorreoElectronico = formCollection["txtCorreoRegistroEmpleado"];
+                user.IdCentroLaboral = int.Parse(formCollection["sctCentroLabores"]);
+                user.Telefono = formCollection["txtTelefonoEmpleado"];
+                user.Password = formCollection["txtPasswordRegistroEmpleado"];
+                try
+                {
+                    var url = $"https://localhost:44335/api/Usuario/RegistroEmpleado";
+                    var request = (HttpWebRequest)WebRequest.Create(url);
+                    string json = JsonConvert.SerializeObject(user);
+                    request.Method = "POST";
+                    request.ContentType = "application/json";
+                    request.Accept = "application/json";
+                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    {
+                        streamWriter.Write(json);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+                    using (WebResponse response = request.GetResponse())
+                    {
+                        using (Stream strReader = response.GetResponseStream())
+                        {
+                            if (strReader == null)
+                            {
+                                TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El servidor no responde.</center></label>');");
+                                return RedirectToAction("Index", "Principal");
+                            }
+                            using (StreamReader objReader = new StreamReader(strReader))
+                            {
+                                string responseBody = objReader.ReadToEnd();
+                                ORespuesta respApi = JsonConvert.DeserializeObject<ORespuesta>(responseBody);
+                                if (respApi.Exitoso)
+                                {
+                                    Debug.WriteLine("Existoso");
+                                    TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Empleado registrado correctamente.</center></label>');");
+                                    return RedirectToAction("Index", "Principal");
+                                }
+                                else
+                                {
+                                    TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>" + respApi.Mensaje + "</center></label>');");
+                                    return RedirectToAction("Index", "Principal");
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (WebException ex)
+                {
+                    TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>" + ex.Message + ".</center></label>');");
+                    return RedirectToAction("Index", "Principal");
+                }
+                catch (Exception e)
+                {
+                    TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>" + e.Message + ".</center></label>');");
+                    return RedirectToAction("Index", "Principal");
+                }
+            }
+            else
+            {
+                TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Verificación Captcha requerida.</center></label>');");
+                return RedirectToAction("Index", "Principal");
+            }
+        }
+
+        private bool CurpValida(string curp)
+        {
+            var re = @"^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$";
+            Regex rx = new Regex(re, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            var validado = rx.IsMatch(curp);
+
+            if (!validado)  //Coincide con el formato general?
+                return false;
+
+            //Validar que coincida el dígito verificador
+            if (!curp.EndsWith(DigitoVerificador(curp.ToUpper())))
+                return false;
+
+            return true; //Validado
+        }
+        private string DigitoVerificador(string curp17)
+        {
+            //Fuente https://consultas.curp.gob.mx/CurpSP/
+            var diccionario = "0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+            var suma = 0.0;
+            var digito = 0.0;
+            for (var i = 0; i < 17; i++)
+                suma = suma + diccionario.IndexOf(curp17[i]) * (18 - i);
+            digito = 10 - suma % 10;
+            if (digito == 10) return "0";
+            return digito.ToString();
+        }
+
+    } 
+
 }

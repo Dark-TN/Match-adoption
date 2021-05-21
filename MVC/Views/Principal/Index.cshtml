@@ -182,7 +182,66 @@
                         }
                     </div>
                     <div class="tab-pane" id="2a">
-                        <h3>We use the class nav-pills instead of nav-tabs which automatically creates a background color for the tab</h3>
+                        @using (Html.BeginForm("RegistroEmpleado", "Usuario", FormMethod.Post))
+                        {
+                        <div class="row row-form">
+                            <div class="col-sm-4">
+                                <label>CURP:</label>
+                                <input type="text" class="form-control CURP" name="txtCURPEmpleado" required />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Nombre:</label>
+                                <input type="text" class="form-control Alfa" name="txtNombreEmpleado" required />
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label>Sexo:</label>
+                                <select class="form-control" name="sctSexoUsuario2" id="sctSexoUsuario2" required>
+                                    <option value="0">Selecciona una opción</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Centro de labores:</label>
+                                <select class="form-control" name="sctCentroLabores" id="sctCentroLabores" required>
+                                    <option value="0">Selecciona una opción</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Teléfono:</label>
+                                <input type="text" class="form-control Telefono" name="txtTelefonoEmpleado" required />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Correo electr&oacute;nico:</label>
+                                <input type="text" class="form-control Correo" name="txtCorreoRegistroEmpleado" required />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Fecha de ingreso:</label>
+                                <input type="text" class="form-control datepicker Fecha" name="dtFechaIngreso" required />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Contraseña:</label>
+                                <input type="password" class="form-control" name="txtPasswordRegistroEmpleado" required />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>Confirmar contraseña:</label>
+                                <input type="password" class="form-control" name="txtConfirmarPasswordRegistroEmpleado" required />
+                            </div>
+                            <div class="col-sm-12 reCaptchaContainer">
+                                <div class="g-recaptcha" data-sitekey="6LftBosaAAAAAO6f9mxfmfcbPFIlVfl57uC23dJZ"></div>
+                            </div>
+                        </div>
+                            <div class="row row-form">
+                                <div class="col-sm-12 text-center">
+                                    <label>¿Ya tienes una cuenta? <a data-dismiss="modal" data-toggle="modal" href="#modal-login">Inicia sesi&oacute;n</a>.</label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="col-sm-12 text-right">
+                                    <button type="submit" class="btn btn-success">Registrarse</button>
+                                </div>
+                            </div>
+
+                        }
                     </div>
                 </div>
             </div>

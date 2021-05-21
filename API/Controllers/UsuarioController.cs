@@ -43,6 +43,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [ActionName("RegistroEmpleado")]
+        public IHttpActionResult RegistroEmpleado(OUsuario PmtPeticion)
+        {
+            ORespuesta res = _D.RegistroEmpleado(PmtPeticion);
+            return Json(res);
+        }
+
+        [HttpPost]
         [ActionName("GuardarTest")]
         public IHttpActionResult GuardarTest(OTest PmtPeticion)
         {

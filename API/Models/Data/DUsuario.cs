@@ -387,5 +387,96 @@ namespace API.Models.Data
                 return Ls;
             }
         }
+
+
+        public ORespuesta RegistroEmpleado(OUsuario PmtPeticion)
+        {
+            ORespuesta Ls = new ORespuesta();
+            try
+            {
+                Hashtable Parametros = new Hashtable()
+                {
+                    {"@curp", PmtPeticion.CURP},
+                    {"@email", PmtPeticion.CorreoElectronico},
+                    {"@idCentroAdopcion", PmtPeticion.IdCentroLaboral }
+                };
+                
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_empleado_verificador", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        int res = int.Parse(ds.Tables[0].Rows[0]["result"].ToString());
+                        if (res == 0)
+                        {
+                            Ls.Exitoso = false;
+                            Ls.Mensaje = "El CURP no se encuentra registrado como empleado, contacte a su Centro";
+                        }
+                        else if(res > 1)
+                        {
+                            if (res == 2)
+                            {
+                                Ls.Mensaje = "El CURP y el correo electrónico proporcionados ya están registrados.";
+                            }
+                            else if (res == 3)
+                            {
+                                Ls.Mensaje = "El CURP proporcionado ya está registrado.";
+                            }
+                            else
+                            {
+                                Ls.Mensaje = "El correo electrónico proporcionado ya está registrado.";
+                            }
+                        }
+                        else
+                        {
+                            PmtPeticion.GenerarPasswordPrivada();
+                            PmtPeticion.PasswordEncriptada = OEncriptadoSimetrico.Encrypt<RijndaelManaged>(PmtPeticion.Password, PmtPeticion.PasswordPrivada);
+                            OUsuario user = new OUsuario();
+                            Parametros = new Hashtable()
+                            {
+                                {"@curp", PmtPeticion.CURP},
+                                {"@nombre", PmtPeticion.Nombre },
+                                {"@fechaIngreso", PmtPeticion.FechaIngreso },
+                                {"@idSexo", PmtPeticion.IdSexo },
+                                {"@idCentroLaboral", PmtPeticion.IdCentroLaboral},
+                                {"@telefono", PmtPeticion.Telefono },
+                                {"@email", PmtPeticion.CorreoElectronico},
+                                {"@password", PmtPeticion.PasswordEncriptada },
+                                {"@passwordPrivada", PmtPeticion.PasswordPrivada }
+                            };
+                            ds = DB.EjecutaProcedimientoAlmacenado("sp_select_registro_empleado", Parametros, cadenaConexionLocal);
+                            if (ds.Tables[0].Rows.Count > 0)
+                            {
+                                res = int.Parse(ds.Tables[0].Rows[0]["idUsuario"].ToString());
+                                user.IdUsuario = res;
+                            }
+                            user.TipoUsuario = 1;
+                            user.CURP = PmtPeticion.CURP;
+                            user.Nombre = PmtPeticion.Nombre;
+                            user.FechaIngreso = PmtPeticion.FechaIngreso;
+                            user.IdSexo = PmtPeticion.IdSexo;               
+                            user.IdCentroLaboral = PmtPeticion.IdCentroLaboral;
+                            user.Telefono = PmtPeticion.Telefono;
+                            user.CorreoElectronico = PmtPeticion.CorreoElectronico;
+                            Ls.Exitoso = true;
+                            Ls.Respuesta.Add(user);
+                        }
+                    }
+                }
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
     }
 }
