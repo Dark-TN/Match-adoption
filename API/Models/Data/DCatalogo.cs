@@ -18,9 +18,9 @@ namespace API.Models.Data
         {
             cadenaConexionLocal = ConfigurationManager.ConnectionStrings["DB"].ConnectionString;
         }
-        public ORespuesta ListarCatalogoSexo()
+        public ORespuesta<OCatalogo> ListarCatalogoSexo()
         {
-            ORespuesta Ls = new ORespuesta();
+            ORespuesta<OCatalogo> Ls = new ORespuesta<OCatalogo>();
             try
             {
                 Hashtable Parametros = new Hashtable();
@@ -55,9 +55,9 @@ namespace API.Models.Data
             }
         }
 
-        public ORespuesta ListarCatalogoEstadoCivil()
+        public ORespuesta<OCatalogo> ListarCatalogoEstadoCivil()
         {
-            ORespuesta Ls = new ORespuesta();
+            ORespuesta<OCatalogo> Ls = new ORespuesta<OCatalogo>();
             try
             {
                 Hashtable Parametros = new Hashtable();
@@ -92,9 +92,9 @@ namespace API.Models.Data
             }
         }
 
-        public ORespuesta ListarCatalogoCentrosAdopcion()
+        public ORespuesta<OCatalogo> ListarCatalogoCentrosAdopcion()
         {
-            ORespuesta Ls = new ORespuesta();
+            ORespuesta<OCatalogo> Ls = new ORespuesta<OCatalogo>();
             try
             {
                 Hashtable Parametros = new Hashtable();
@@ -129,9 +129,9 @@ namespace API.Models.Data
             }
         }
 
-        public ORespuesta ListarCatalogoNivelEstudios()
+        public ORespuesta<OCatalogo> ListarCatalogoNivelEstudios()
         {
-            ORespuesta Ls = new ORespuesta();
+            ORespuesta<OCatalogo> Ls = new ORespuesta<OCatalogo>();
             try
             {
                 Hashtable Parametros = new Hashtable();

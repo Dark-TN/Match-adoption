@@ -22,7 +22,7 @@ namespace API.Controllers
         [ActionName("Login")]
         public IHttpActionResult Login(OUsuario PmtPeticion)
         {
-            ORespuesta res = _D.Login(PmtPeticion);
+            ORespuesta<OUsuario> res = _D.Login(PmtPeticion);
             return Json(res);
         }
 
@@ -30,7 +30,7 @@ namespace API.Controllers
         [ActionName("RegistroSolicitante")]
         public IHttpActionResult RegistroSolicitante(OUsuario PmtPeticion)
         {
-            ORespuesta res = _D.RegistroUsuario(PmtPeticion);
+            ORespuesta<OUsuario> res = _D.RegistroUsuario(PmtPeticion);
             return Json(res);
         }
 
@@ -38,7 +38,7 @@ namespace API.Controllers
         [ActionName("ListarPreguntas")]
         public IHttpActionResult ListarPreguntas(OUsuario PmtPeticion)
         {
-            ORespuesta res = _D.ListarPreguntas(PmtPeticion);
+            ORespuesta<OTest> res = _D.ListarPreguntas(PmtPeticion);
             return Json(res);
         }
 
@@ -46,7 +46,7 @@ namespace API.Controllers
         [ActionName("RegistroEmpleado")]
         public IHttpActionResult RegistroEmpleado(OUsuario PmtPeticion)
         {
-            ORespuesta res = _D.RegistroEmpleado(PmtPeticion);
+            ORespuesta<OUsuario> res = _D.RegistroEmpleado(PmtPeticion);
             return Json(res);
         }
 
@@ -54,7 +54,15 @@ namespace API.Controllers
         [ActionName("GuardarTest")]
         public IHttpActionResult GuardarTest(OTest PmtPeticion)
         {
-            ORespuesta res = _D.GuardarTest(PmtPeticion);
+            ORespuesta<string> res = _D.GuardarTest(PmtPeticion);
+            return Json(res);
+        }
+
+        [HttpPost]
+        [ActionName("ListarTest")]
+        public IHttpActionResult ListarTest(OUsuario PmtPeticion)
+        {
+            ORespuesta<OTest> res = _D.ListarTest(PmtPeticion);
             return Json(res);
         }
     }

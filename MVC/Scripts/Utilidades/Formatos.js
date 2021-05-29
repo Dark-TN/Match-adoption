@@ -5,11 +5,11 @@
 
     Inputmask({ regex: "[0-9]{10}" }).mask($(".Telefono"));
 
-    Inputmask({ regex: "[a-zA-z0-9#-_ ]{200}" }).mask($(".Alfanumerico"));
+    Inputmask({ regex: "[a-zA-z0-9#-_ ]*" }).mask($(".Alfanumerico"));
 
-    Inputmask({ regex: "[a-zA-z0-9#-_]{200}" }).mask($(".Password"));
+    Inputmask({ regex: "[a-zA-z0-9#-_]{0,20}" }).mask($(".Password"));
 
-    Inputmask({ regex: "[a-zA-ZñÑ ]{150}" }).mask($(".Alfa"));
+    Inputmask({ regex: "[a-zA-ZñÑ ]*" }).mask($(".Alfa"));
 
     Inputmask({ regex: "[0-9]{2}\/[0-9]{2}\/[0-9]{4}" }).mask($(".Fecha"));
 

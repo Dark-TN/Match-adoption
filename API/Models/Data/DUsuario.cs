@@ -24,9 +24,9 @@ namespace API.Models.Data
             cadenaConexionLocal = ConfigurationManager.ConnectionStrings["DB"].ConnectionString;
         }
 
-        public ORespuesta Login(OUsuario PmtPeticion)
+        public ORespuesta<OUsuario> Login(OUsuario PmtPeticion)
         {
-            ORespuesta Ls = new ORespuesta();
+            ORespuesta<OUsuario> Ls = new ORespuesta<OUsuario>();
             try
             {
                 Hashtable Parametros = new Hashtable()
@@ -95,9 +95,9 @@ namespace API.Models.Data
             }
         }
 
-        public ORespuesta RegistroUsuario(OUsuario PmtPeticion)
+        public ORespuesta<OUsuario> RegistroUsuario(OUsuario PmtPeticion)
         {
-            ORespuesta Ls = new ORespuesta();
+            ORespuesta<OUsuario> Ls = new ORespuesta<OUsuario>();
             try
             {
                 Hashtable Parametros = new Hashtable()
@@ -185,9 +185,9 @@ namespace API.Models.Data
             }
         }
 
-        public ORespuesta ListarPreguntas(OUsuario PmtPeticion)
+        public ORespuesta<OTest> ListarPreguntas(OUsuario PmtPeticion)
         {
-            ORespuesta Ls = new ORespuesta();
+            ORespuesta<OTest> Ls = new ORespuesta<OTest>();
             try
             {
                 Hashtable Parametros = new Hashtable()
@@ -242,9 +242,9 @@ namespace API.Models.Data
             }
         }
 
-        public ORespuesta GuardarTest(OTest PmtPeticion)
+        public ORespuesta<string> GuardarTest(OTest PmtPeticion)
         {
-            ORespuesta Ls = new ORespuesta();
+            ORespuesta<string> Ls = new ORespuesta<string>();
             try
             {
                 int Errores = 0;
@@ -279,11 +279,13 @@ namespace API.Models.Data
                 }
                 else
                 {
+                    PmtPeticion.CalificarTest();
                     Hashtable Parametros = new Hashtable()
                     {
                         {"@idUsuario", PmtPeticion.IdUsuario},
                         {"@fechaInicio", PmtPeticion.FechaInicio },
-                        {"@fechaFin", PmtPeticion.FechaFin }
+                        {"@fechaFin", PmtPeticion.FechaFin },
+                        {"@idEstiloCrianza", PmtPeticion.IdEstiloCrianza }
                     };
                     DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_insert_test", Parametros, cadenaConexionLocal);
                     if (ds.Tables.Count > 0)
@@ -307,11 +309,21 @@ namespace API.Models.Data
                                 {
                                     Parametros = new Hashtable()
                                     {
-                                        {"@idTest", PmtPeticion.IdUsuario},
+                                        {"@idTest", PmtPeticion.IdTest},
                                         {"@idPregunta", pregunta.IdPregunta },
                                         {"@respuesta", pregunta.Respuesta }
                                     };
                                     ds = DB.EjecutaProcedimientoAlmacenado("sp_insert_respuestas_test", Parametros, cadenaConexionLocal);
+                                }
+                                foreach (KeyValuePair<string, int> calificacion in PmtPeticion.CalificacionesHabilidades)
+                                {
+                                    Parametros = new Hashtable()
+                                    {
+                                        {"@idTest", PmtPeticion.IdTest},
+                                        {"@idHabilidad", int.Parse(calificacion.Key) },
+                                        {"@calificacion", calificacion.Value }
+                                    };
+                                    ds = DB.EjecutaProcedimientoAlmacenado("sp_insert_calificacion_habilidades_test", Parametros, cadenaConexionLocal);
                                 }
                                 Ls.Exitoso = true;
                             }
@@ -334,9 +346,9 @@ namespace API.Models.Data
             }
         }
 
-        public ORespuesta ModificarSolicitante(OUsuario PmtPeticion)
+        public ORespuesta<OUsuario> ModificarSolicitante(OUsuario PmtPeticion)
         {
-            ORespuesta Ls = new ORespuesta();
+            ORespuesta<OUsuario> Ls = new ORespuesta<OUsuario>();
             try
             {
                 if (string.IsNullOrEmpty(PmtPeticion.Nombre) || string.IsNullOrEmpty(PmtPeticion.Nombre) ||
@@ -389,9 +401,9 @@ namespace API.Models.Data
         }
 
 
-        public ORespuesta RegistroEmpleado(OUsuario PmtPeticion)
+        public ORespuesta<OUsuario> RegistroEmpleado(OUsuario PmtPeticion)
         {
-            ORespuesta Ls = new ORespuesta();
+            ORespuesta<OUsuario> Ls = new ORespuesta<OUsuario>();
             try
             {
                 Hashtable Parametros = new Hashtable()
@@ -460,6 +472,52 @@ namespace API.Models.Data
                             user.CorreoElectronico = PmtPeticion.CorreoElectronico;
                             Ls.Exitoso = true;
                             Ls.Respuesta.Add(user);
+                        }
+                    }
+                }
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+        public ORespuesta<OTest> ListarTest(OUsuario PmtPeticion)
+        {
+            ORespuesta<OTest> Ls = new ORespuesta<OTest>();
+            try
+            {
+                Hashtable Parametros = new Hashtable()
+                {
+                    {"@idUsuario", PmtPeticion.IdUsuario}
+                };
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_lista_tests", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables.Count > 0)
+                    {
+                        if (ds.Tables[0].Rows.Count > 0)
+                        {
+                            OTest _Dato = new OTest();
+                            foreach (DataRow row in ds.Tables[0].Rows)
+                            {
+                                _Dato.IdTest = int.Parse(row["idTest"].ToString());
+                                _Dato.FechaInicio = DateTime.Parse(row["fechaInicio"].ToString());
+                                _Dato.FechaFin = DateTime.Parse(row["fechaFin"].ToString());
+                                _Dato.EstiloCrianza = row["estiloCrianza"].ToString();
+                                _Dato.CalificacionesHabilidades.Add(row["habilidad"].ToString(), int.Parse(row["calificacion"].ToString()));
+                            }
+                            Ls.Respuesta.Add(_Dato);
+                            Ls.Exitoso = true;
                         }
                     }
                 }
