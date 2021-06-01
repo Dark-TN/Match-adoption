@@ -15,8 +15,9 @@ namespace MVC.Models.Negocio.Test
         public DateTime FechaLimite { get; set; }
         public double TiempoRestante { get; set; }
         public double TiempoDisponible { get; set; }
-        public List<int> CalificacionesHabilidades { get; set; }
+        public Dictionary<string, int> CalificacionesHabilidades { get; set; }
         public int IdEstiloCrianza { get; set; }
+        public string EstiloCrianza { get; set; }
 
         public OTest()
         {
@@ -28,8 +29,9 @@ namespace MVC.Models.Negocio.Test
             this.FechaLimite = DateTime.MinValue;
             this.TiempoRestante = 0.0;
             this.TiempoDisponible = 0.0;
-            this.CalificacionesHabilidades = new List<int>();
+            this.CalificacionesHabilidades = new Dictionary<string, int>();
             this.IdEstiloCrianza = 0;
+            this.EstiloCrianza = string.Empty;
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using System.Collections;
 
 namespace API.Controllers
 {
@@ -23,7 +24,7 @@ namespace API.Controllers
         [ActionName("Login")]
         public IHttpActionResult Login(OUsuario PmtPeticion)
         {
-            ORespuesta res = _D.Login(PmtPeticion);
+            ORespuesta<OUsuario> res = _D.Login(PmtPeticion);
             return Json(res);
         }
 
@@ -31,7 +32,7 @@ namespace API.Controllers
         [ActionName("RegistroSolicitante")]
         public IHttpActionResult RegistroSolicitante(OUsuario PmtPeticion)
         {
-            ORespuesta res = _D.RegistroUsuario(PmtPeticion);
+            ORespuesta<OUsuario> res = _D.RegistroUsuario(PmtPeticion);
             return Json(res);
         }
 
@@ -39,7 +40,7 @@ namespace API.Controllers
         [ActionName("ListarPreguntas")]
         public IHttpActionResult ListarPreguntas(OUsuario PmtPeticion)
         {
-            ORespuesta res = _D.ListarPreguntas(PmtPeticion);
+            ORespuesta<OTest> res = _D.ListarPreguntas(PmtPeticion);
             return Json(res);
         }
 
@@ -47,7 +48,7 @@ namespace API.Controllers
         [ActionName("RegistroEmpleado")]
         public IHttpActionResult RegistroEmpleado(OUsuario PmtPeticion)
         {
-            ORespuesta res = _D.RegistroEmpleado(PmtPeticion);
+            ORespuesta<OUsuario> res = _D.RegistroEmpleado(PmtPeticion);
             return Json(res);
         }
 
@@ -55,7 +56,15 @@ namespace API.Controllers
         [ActionName("GuardarTest")]
         public IHttpActionResult GuardarTest(OTest PmtPeticion)
         {
-            ORespuesta res = _D.GuardarTest(PmtPeticion);
+            ORespuesta<string> res = _D.GuardarTest(PmtPeticion);
+            return Json(res);
+        }
+
+        [HttpPost]
+        [ActionName("ListarTest")]
+        public IHttpActionResult ListarTest(OUsuario PmtPeticion)
+        {
+            ORespuesta<OTest> res = _D.ListarTest(PmtPeticion);
             return Json(res);
         }
 
@@ -63,7 +72,7 @@ namespace API.Controllers
         [ActionName("RegistrarMenor")]
         public IHttpActionResult RegistrarMenor(OMenores PmtPeticion)
         {
-            ORespuesta res = _D.RegistrarMenor(PmtPeticion);
+            ORespuesta<OMenores> res = _D.RegistrarMenor(PmtPeticion);
             return Json(res);
         }
         
@@ -72,7 +81,7 @@ namespace API.Controllers
         [ActionName("ObtenerMenores")]
         public IHttpActionResult ObtenerMenores()
         {
-            ORespuesta res = _D.ObtenerMenores();
+            ORespuesta<ArrayList> res = _D.ObtenerMenores();
             return Json(res);
         }
 

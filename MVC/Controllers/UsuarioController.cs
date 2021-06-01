@@ -16,6 +16,7 @@ using System.Web;
 using System.Web.Mvc;
 using MVC.Models.Negocio.Test;
 using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace MVC.Controllers
 {
@@ -134,7 +135,11 @@ namespace MVC.Controllers
             else
             {
                 ((OTest)Session["Test"]).IdUsuario = ((OUsuario)Session["Usuario"]).IdUsuario;
-                ((OTest)Session["Test"]).Preguntas = pmtPeticion;
+                for (int i = 0; i < ((OTest)Session["Test"]).Preguntas.Count; i++)
+                {
+                    ((OTest)Session["Test"]).Preguntas[i].Respuesta = pmtPeticion[i].Respuesta;
+                    Debug.WriteLine("########## " + ((OTest)Session["Test"]).Preguntas[i].Respuesta.ToString() + " " + ((OTest)Session["Test"]).Preguntas[i].IdPregunta.ToString());
+                }
                 try
                 {
                     var url = $"https://localhost:44335/api/Usuario/GuardarTest";
@@ -161,7 +166,7 @@ namespace MVC.Controllers
                             using (StreamReader objReader = new StreamReader(strReader))
                             {
                                 string responseBody = objReader.ReadToEnd();
-                                ORespuesta respApi = JsonConvert.DeserializeObject<ORespuesta>(responseBody);
+                                ORespuesta<string> respApi = JsonConvert.DeserializeObject<ORespuesta<string>>(responseBody);
                                 if (respApi.Exitoso)
                                 {
                                     TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Se guardó la prueba correctamente.</center></label>');");
@@ -217,12 +222,11 @@ namespace MVC.Controllers
                         using (StreamReader objReader = new StreamReader(strReader))
                         {
                             string responseBody = objReader.ReadToEnd();
-                            ORespuesta respApi = JsonConvert.DeserializeObject<ORespuesta>(responseBody);
+                            ORespuesta<OTest> respApi = JsonConvert.DeserializeObject<ORespuesta<OTest>>(responseBody);
                             if (respApi.Exitoso)
                             {
-                                OTest test = JsonConvert.DeserializeObject<OTest>(respApi.Respuesta[0].ToString());
-                                test.TiempoDisponible = 2700;
-                                Session["Test"] = test;
+                                respApi.Respuesta[0].TiempoDisponible = 2700;
+                                Session["Test"] = respApi.Respuesta[0];
                                 return RedirectToAction("Test");
                             }
                             else
@@ -237,13 +241,11 @@ namespace MVC.Controllers
             catch (WebException ex)
             {
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>" + ex.Message + ".</center></label>');");
-                TempData.Keep("Mensaje");
                 return RedirectToAction("Solicitante");
             }
             catch (Exception e)
             {
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>" + e.Message + ".</center></label>');");
-                TempData.Keep("Mensaje");
                 return RedirectToAction("Solicitante");
             }
         }
@@ -295,18 +297,17 @@ namespace MVC.Controllers
                         using (StreamReader objReader = new StreamReader(strReader))
                         {
                             string responseBody = objReader.ReadToEnd();
-                            ORespuesta respApi = JsonConvert.DeserializeObject<ORespuesta>(responseBody);
+                            ORespuesta<OUsuario> respApi = JsonConvert.DeserializeObject<ORespuesta<OUsuario>>(responseBody);
                             if (respApi.Exitoso)
                             {
-                                OUsuario sessionUser = JsonConvert.DeserializeObject<OUsuario>(respApi.Respuesta[0].ToString());                               
-                                if (sessionUser.TipoUsuario == 1)
+                                if (respApi.Respuesta[0].TipoUsuario == 1)
                                 {
-                                    Session["Usuario"] = sessionUser;
+                                    Session["Usuario"] = respApi.Respuesta[0];
                                     return RedirectToAction("Empleado");
                                 }
                                 else
                                 {
-                                    Session["Usuario"] = sessionUser;
+                                    Session["Usuario"] = respApi.Respuesta[0];
                                     return RedirectToAction("Solicitante");
                                 }
                             }
@@ -413,11 +414,10 @@ namespace MVC.Controllers
                             using (StreamReader objReader = new StreamReader(strReader))
                             {
                                 string responseBody = objReader.ReadToEnd();
-                                ORespuesta respApi = JsonConvert.DeserializeObject<ORespuesta>(responseBody);
+                                ORespuesta<OUsuario> respApi = JsonConvert.DeserializeObject<ORespuesta<OUsuario>>(responseBody);
                                 if (respApi.Exitoso)
                                 {
-                                    OUsuario sessionUser = JsonConvert.DeserializeObject<OUsuario>(respApi.Respuesta[0].ToString());
-                                    Session["Usuario"] = sessionUser;
+                                    Session["Usuario"] = respApi.Respuesta[0];
                                     return RedirectToAction("Solicitante");
                                 }
                                 else
@@ -533,7 +533,7 @@ namespace MVC.Controllers
                             using (StreamReader objReader = new StreamReader(strReader))
                             {
                                 string responseBody = objReader.ReadToEnd();
-                                ORespuesta respApi = JsonConvert.DeserializeObject<ORespuesta>(responseBody);
+                                ORespuesta<string> respApi = JsonConvert.DeserializeObject<ORespuesta<string>>(responseBody);
                                 if (respApi.Exitoso)
                                 {
                                     Debug.WriteLine("Existoso");
@@ -593,7 +593,7 @@ namespace MVC.Controllers
                         using (StreamReader objReader = new StreamReader(strReader))
                         {
                             string responseBody = objReader.ReadToEnd();
-                            ORespuesta respApi = JsonConvert.DeserializeObject<ORespuesta>(responseBody);
+                            ORespuesta<ArrayList> respApi = JsonConvert.DeserializeObject<ORespuesta<ArrayList>>(responseBody);
                             if (respApi.Exitoso)
                             {
                                 response.Close();
@@ -671,7 +671,7 @@ namespace MVC.Controllers
                             using (StreamReader objReader = new StreamReader(strReader))
                             {
                                 string responseBody = objReader.ReadToEnd();
-                                ORespuesta respApi = JsonConvert.DeserializeObject<ORespuesta>(responseBody);
+                                ORespuesta<OMenores> respApi = JsonConvert.DeserializeObject<ORespuesta<OMenores>>(responseBody);
                                 if (respApi.Exitoso)
                                 {
                                     Debug.WriteLine("Existoso");                                   
@@ -726,6 +726,62 @@ namespace MVC.Controllers
             return digito.ToString();
         }
 
+        [HttpPost]
+        public ActionResult ListarTest()
+        {
+            ORespuesta<string> res = new ORespuesta<string>();
+            try
+            {
+                var url = $"https://localhost:44335/api/Usuario/ListarTest";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                string json = JsonConvert.SerializeObject(((OUsuario)Session["Usuario"]));
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+                        if (strReader == null)
+                        {
+                            res.Mensaje = "El servidor no responde.";
+                            res.Exitoso = false;
+                            return Json(res);
+                        }
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+                            string responseBody = objReader.ReadToEnd();
+                            ORespuesta<OTest> respApi = JsonConvert.DeserializeObject<ORespuesta<OTest>>(responseBody);
+                            foreach(KeyValuePair<string, int> key in respApi.Respuesta[0].CalificacionesHabilidades)
+                            {
+                                Debug.WriteLine("####### " + key.Key + " " + key.Value.ToString());
+                            }
+                            return Json(respApi);
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                res.Mensaje = ex.Message;
+                res.Exitoso = false;
+                Debug.WriteLine("####### " + ex.Message);
+                return Json(res);
+            }
+            catch (Exception e)
+            {
+                res.Mensaje = e.Message;
+                res.Exitoso = false;
+                Debug.WriteLine("####### " + e.Message);
+                return Json(res);
+            }
+        }
     } 
 
 
