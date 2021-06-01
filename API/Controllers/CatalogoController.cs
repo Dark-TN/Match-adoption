@@ -45,12 +45,6 @@ namespace API.Controllers
             ORespuesta<OCatalogo> res = _D.ListarCatalogoCentrosAdopcion();
             return Json(res);
         }
-        [HttpPost]
-        [ActionName("ListarMenoresAdopcion")]
-        public IHttpActionResult ListarMenoresAdopcion()
-        {
-            ORespuesta res = _D.ListarMenoresAdopcion();
-            return Json(res);
-        }
+     
     }
 }
