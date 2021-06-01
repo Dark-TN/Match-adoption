@@ -1,0 +1,92 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/bundles/Css/Inicial")
+    @Scripts.Render("~/bundles/Js/Inicial")
+    @Styles.Render("~/bundles/Css/DataTables")
+    @Scripts.Render("~/bundles/Js/DataTables")
+    <link rel="stylesheet" type="text/css" href="~/Content/Master/Master.css" media="screen" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <script type="text/javascript">
+        var urlDatosSolicitante = '@Url.Action("DatosUsuario", "Usuario")';
+        var urlModificarDatosSolicitante = '@Url.Action("ModificarDatosSolicitante", "Usuario")';
+    </script>
+    <script type="text/javascript" src="~/Scripts/Pagina/Usuario/MasterSolicitante.js"></script>
+    <div id="menu-model">
+        @Html.Partial("~/Views/Shared/_MenuEmpleado.cshtml")
+    </div>
+    <div class="main">
+        @RenderBody()
+    </div>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modificar informaci&oacute;n</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row row-form">
+                        <div class="col-sm-4">
+                            <label>CURP:</label>
+                            <label id="txtModalCURPUsuario" required />
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Nombre:</label>
+                            <label id="txtModalNombreUsuario" required />
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Fecha de ingreso:</label>
+                            <input type="text" class="form-control datepicker Fecha" id="dtFechaIngreso" required />
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Sexo:</label>
+                            <select class="form-control" name="sctSexoUsuario2" id="sctSexoUsuario2" required>
+                                <option value="0">Selecciona una opción</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Centro de labores:</label>
+                            <select class="form-control" name="sctCentroLabores" id="sctCentroLabores" required>
+                                <option value="0">Selecciona una opción</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Teléfono:</label>
+                            <input type="text" class="form-control Telefono" name="txtTelefonoEmpleado" required />
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Correo electr&oacute;nico:</label>
+                            <input type="text" class="form-control Correo" name="txtCorreoRegistroEmpleado" required />
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Contraseña actual:</label>
+                            <input type="password" class="form-control AlfaNumerico" id="txtModalPassword" required>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Nueva contraseña:</label>
+                            <input type="password" class="form-control AlfaNumerico" id="txtModalNuevaPassword" required>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Confirmar contraseña:</label>
+                            <input type="password" class="form-control AlfaNumerico" id="txtModalConfirmarPassword" required>
+                        </div>
+                        <div class="col-sm-6">
+                            <button type="button" class="btn btn-primary">Cambiar contraseña</button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="btnModificarInformacion">Aceptar</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

@@ -2,6 +2,7 @@
 using API.Models.Negocio.Seguridad.EncriptadoSimetrico;
 using API.Models.Negocio.Test;
 using API.Models.Negocio.Usuario;
+using API.Models.Negocio.Menores;
 using API.Models.Peticion;
 using System;
 using System.Collections;
@@ -13,6 +14,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
+using System.Web.Helpers;
+using Microsoft.Ajax.Utilities;
 
 namespace API.Models.Data
 {
@@ -54,14 +57,14 @@ namespace API.Models.Data
                         user.FechaNacimiento = DateTime.Parse(ds.Tables[0].Rows[0]["fechaNacimiento"].ToString());
                         user.PasswordEncriptada = ds.Tables[0].Rows[0]["password"].ToString();
                         user.PasswordPrivada = ds.Tables[0].Rows[0]["passwordPrivada"].ToString();
-                        if(user.IdEstatus == 2)
+                        if (user.IdEstatus == 2)
                         {
                             Ls.Exitoso = false;
                             Ls.Mensaje = "El usuario está inactivo.";
                         }
                         else
                         {
-                            if(PmtPeticion.Password.Equals(OEncriptadoSimetrico.Decrypt<RijndaelManaged>(user.PasswordEncriptada, user.PasswordPrivada)))
+                            if (PmtPeticion.Password.Equals(OEncriptadoSimetrico.Decrypt<RijndaelManaged>(user.PasswordEncriptada, user.PasswordPrivada)))
                             {
                                 Ls.Exitoso = true;
                                 Ls.Respuesta.Add(user);
@@ -114,7 +117,7 @@ namespace API.Models.Data
                         if (res > 1)
                         {
                             Ls.Exitoso = false;
-                            if(res == 2)
+                            if (res == 2)
                             {
                                 Ls.Mensaje = "El CURP y el correo electrónico proporcionados ya están registrados.";
                             }
@@ -296,7 +299,7 @@ namespace API.Models.Data
                             {
                                 Ls.Mensaje = "Has alcanzado el número máximo de intentos.";
                             }
-                            else  if(_Dato == -2)
+                            else if (_Dato == -2)
                             {
                                 Ls.Mensaje = "Debes esperar al menos 3 meses a partir de la fecha de término de tu último test para poder realizar otro intento.";
                             }
@@ -368,11 +371,11 @@ namespace API.Models.Data
                         OUsuario user = new OUsuario();
                         user.PasswordEncriptada = ds.Tables[0].Rows[0]["password"].ToString();
                         user.PasswordPrivada = ds.Tables[0].Rows[0]["passwordPrivada"].ToString();
-              
-                            Ls.Exitoso = true;
+
+                        Ls.Exitoso = true;
                     }
                 }
-            return Ls;
+                return Ls;
             }
             catch (SqlException e)
             {
@@ -400,7 +403,7 @@ namespace API.Models.Data
                     {"@email", PmtPeticion.CorreoElectronico},
                     {"@idCentroAdopcion", PmtPeticion.IdCentroLaboral }
                 };
-                
+
                 DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_empleado_verificador", Parametros, cadenaConexionLocal);
                 if (ds.Tables.Count > 0)
                 {
@@ -412,7 +415,7 @@ namespace API.Models.Data
                             Ls.Exitoso = false;
                             Ls.Mensaje = "El CURP no se encuentra registrado como empleado, contacte a su Centro";
                         }
-                        else if(res > 1)
+                        else if (res > 1)
                         {
                             if (res == 2)
                             {
@@ -454,7 +457,7 @@ namespace API.Models.Data
                             user.CURP = PmtPeticion.CURP;
                             user.Nombre = PmtPeticion.Nombre;
                             user.FechaIngreso = PmtPeticion.FechaIngreso;
-                            user.IdSexo = PmtPeticion.IdSexo;               
+                            user.IdSexo = PmtPeticion.IdSexo;
                             user.IdCentroLaboral = PmtPeticion.IdCentroLaboral;
                             user.Telefono = PmtPeticion.Telefono;
                             user.CorreoElectronico = PmtPeticion.CorreoElectronico;
@@ -478,5 +481,189 @@ namespace API.Models.Data
                 return Ls;
             }
         }
+
+
+        public ORespuesta RegistrarMenor(OMenores PmtPeticion)
+        {
+            ORespuesta Ls = new ORespuesta();
+            try
+            {
+                Hashtable Parametros = new Hashtable()
+                {
+                    {"@nombres", PmtPeticion.nombres},
+                    {"@apellidos", PmtPeticion.apellidos},
+                    {"@idSexo", PmtPeticion.idSexo },
+                    {"@idCentroAdopcion", PmtPeticion.idCentroAdopcion }
+
+
+                };
+                Debug.WriteLine(PmtPeticion.nombres);
+                Debug.WriteLine(PmtPeticion.apellidos);
+                Debug.WriteLine(PmtPeticion.idSexo);
+                Debug.WriteLine(PmtPeticion.idCentroAdopcion);
+
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_verify_menor_register", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        int res = int.Parse(ds.Tables[0].Rows[0]["result"].ToString());
+                        if (res == 0)
+                        {
+                            OMenores menor = new OMenores();
+                            Parametros = new Hashtable()
+                            {
+                                {"@nombres", PmtPeticion.nombres},
+                                {"@apellidos", PmtPeticion.apellidos},
+                                {"@idSexo", PmtPeticion.idSexo },
+                                {"@antecedentes", PmtPeticion.antecedentes },
+                                {"@idCentroAdopcion", PmtPeticion.idCentroAdopcion },
+                                {"@cAl", PmtPeticion.cAl },
+                                {"@cAp", PmtPeticion.cAp },
+                                {"@cAs", PmtPeticion.cAs },
+                                {"@cAt", PmtPeticion.cAs },
+                                {"@cRp", PmtPeticion.cRp },
+                                {"@cEm", PmtPeticion.cEm },
+                                {"@cEe", PmtPeticion.cEe },
+                                {"@cIn", PmtPeticion.cIn },
+                                {"@cFl", PmtPeticion.cFl },
+                                {"@cRf", PmtPeticion.cRf },
+                                {"@cSc", PmtPeticion.cSc },
+                                {"@cTf", PmtPeticion.cTf },
+                                {"@cAg", PmtPeticion.cAg },
+                                {"@cDl", PmtPeticion.cDl },
+                                {"@edad", PmtPeticion.edad },
+                                {"@edadMeses", PmtPeticion.edadMeses }
+                            };
+                            ds = DB.EjecutaProcedimientoAlmacenado("sp_select_agregar_menor", Parametros, cadenaConexionLocal);
+                            if (ds.Tables[0].Rows.Count > 0)
+                            {
+                                res = int.Parse(ds.Tables[0].Rows[0]["idMenorAdopcion"].ToString());
+                                menor.idMenorAdopcion = res;
+                            }
+                            menor.idEstatus = PmtPeticion.idEstatus;
+                            menor.nombres = PmtPeticion.nombres;
+                            menor.apellidos = PmtPeticion.apellidos;
+                            menor.idSexo = PmtPeticion.idSexo;
+                            menor.antecedentes = PmtPeticion.antecedentes;
+                            menor.idCentroAdopcion = PmtPeticion.idCentroAdopcion;
+                            menor.cAl = PmtPeticion.cAl;
+                            menor.cAp = PmtPeticion.cAp;
+                            menor.cAs = PmtPeticion.cAs;
+                            menor.cRp = PmtPeticion.cRp;
+                            menor.cEm = PmtPeticion.cEm;
+                            menor.cEe = PmtPeticion.cEe;
+                            menor.cIn = PmtPeticion.cIn;
+                            menor.cFl = PmtPeticion.cFl;
+                            menor.cRf = PmtPeticion.cRf;
+                            menor.cSc = PmtPeticion.cSc;
+                            menor.cTf = PmtPeticion.cTf;
+                            menor.cAg = PmtPeticion.cAg;
+                            menor.cDl = PmtPeticion.cDl;
+                            menor.edad = PmtPeticion.edad;
+                            menor.edadMeses = PmtPeticion.edadMeses;
+                            Ls.Exitoso = true;
+                            Ls.Respuesta.Add(menor);
+
+                        }
+                        else
+                        {
+                            Ls.Exitoso = false;
+                            Ls.Mensaje = "El menor que intenta ingresar ya se encuentra registrado.";
+                        }
+                    }
+
+                }
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+
+        public ORespuesta ObtenerMenores()
+        {
+            ORespuesta Ls = new ORespuesta();
+            try
+            {
+                Hashtable Parametros = new Hashtable();
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_lista_men_adopcion", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    { ArrayList listMenores = new ArrayList();
+                       for(int i=0; i < ds.Tables[0].Rows.Count; i++)
+                        {
+                            OMenores menor = new OMenores();
+                            menor.idMenorAdopcion= int.Parse(ds.Tables[0].Rows[i]["idMenorAdopcion"].ToString());
+                            menor.idEstatus = int.Parse(ds.Tables[0].Rows[i]["idEstatus"].ToString());
+                            menor.idSexo = int.Parse(ds.Tables[0].Rows[i]["idSexo"].ToString());
+                            menor.idCentroAdopcion = int.Parse(ds.Tables[0].Rows[i]["idCentroAdopcion"].ToString());
+                            menor.nombres = ds.Tables[0].Rows[i]["nombres"].ToString();
+                            menor.apellidos = ds.Tables[0].Rows[i]["apellidos"].ToString();
+                            menor.antecedentes = ds.Tables[0].Rows[i]["antecedentes"].ToString();
+                            menor.cAl = int.Parse(ds.Tables[0].Rows[i]["cAl"].ToString());
+                            menor.cAp = int.Parse(ds.Tables[0].Rows[i]["cAp"].ToString());
+                            menor.cAs = int.Parse(ds.Tables[0].Rows[i]["cAs"].ToString());
+                            menor.cAt = int.Parse(ds.Tables[0].Rows[i]["cAt"].ToString());
+                            menor.cRp = int.Parse(ds.Tables[0].Rows[i]["cRp"].ToString());
+                            menor.cEm = int.Parse(ds.Tables[0].Rows[i]["cEm"].ToString());
+                            menor.cEe = int.Parse(ds.Tables[0].Rows[i]["cEe"].ToString());
+                            menor.cIn = int.Parse(ds.Tables[0].Rows[i]["cIn"].ToString());
+                            menor.cFl = int.Parse(ds.Tables[0].Rows[i]["cFl"].ToString());
+                            menor.cRf = int.Parse(ds.Tables[0].Rows[i]["cRf"].ToString());
+                            menor.cTf = int.Parse(ds.Tables[0].Rows[i]["cTf"].ToString());
+                            menor.cSc = int.Parse(ds.Tables[0].Rows[i]["cSc"].ToString());
+                            menor.cAg = int.Parse(ds.Tables[0].Rows[i]["cAg"].ToString());
+                            menor.cDl = int.Parse(ds.Tables[0].Rows[i]["cDl"].ToString());
+                            menor.edad = int.Parse(ds.Tables[0].Rows[i]["edad"].ToString());
+                            menor.edadMeses = int.Parse(ds.Tables[0].Rows[i]["edadMeses"].ToString());
+                            listMenores.Add(menor);
+                        }
+                        Ls.Exitoso = true;
+                        Ls.Respuesta.Add(listMenores);
+                        return Ls;
+                    }
+                    else
+                    {
+                        Ls.Exitoso = true;
+                        Ls.Mensaje = "No hay menores en adopción registrados.";
+                    }
+                    
+                    
+                }
+                Ls.Exitoso = false;
+                Ls.Mensaje = "Error en la base de datos";
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        } 
+
+
+
+
+
     }
+
 }

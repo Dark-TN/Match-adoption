@@ -1,4 +1,5 @@
 ﻿using MVC.Models.Negocio.Usuario;
+using MVC.Models.Negocio.Menores;
 using MVC.Models.Peticion;
 using Newtonsoft.Json;
 using System.Diagnostics;
@@ -36,6 +37,17 @@ namespace MVC.Controllers
             return View(Session["Usuario"]);
         }
 
+        public ActionResult Empleado()
+        {
+            if (TempData["Mensaje"] != null)
+            {
+                ViewBag.Mensaje = TempData["Mensaje"].ToString();
+            }
+            return View(Session["Usuario"]);
+        }
+
+        
+
         [HttpPost]
         public ActionResult SetTest()
         {
@@ -51,6 +63,15 @@ namespace MVC.Controllers
         [HttpPost]
         public JsonResult ModificarDatosSolicitante(OUsuario PmtPeticion)
         {
+            PmtPeticion.IdUsuario = ((OUsuario)Session["Usuario"]).IdUsuario;
+            return Json(PmtPeticion);
+        }
+
+
+        [HttpPost]
+        public JsonResult CambiarContraseña(OUsuario PmtPeticion)
+        {
+            Debug.WriteLine("Se cambio la contraseña");
             PmtPeticion.IdUsuario = ((OUsuario)Session["Usuario"]).IdUsuario;
             return Json(PmtPeticion);
         }
@@ -277,10 +298,11 @@ namespace MVC.Controllers
                             ORespuesta respApi = JsonConvert.DeserializeObject<ORespuesta>(responseBody);
                             if (respApi.Exitoso)
                             {
-                                OUsuario sessionUser = JsonConvert.DeserializeObject<OUsuario>(respApi.Respuesta[0].ToString());
+                                OUsuario sessionUser = JsonConvert.DeserializeObject<OUsuario>(respApi.Respuesta[0].ToString());                               
                                 if (sessionUser.TipoUsuario == 1)
                                 {
-                                    return RedirectToAction("Solicitante");
+                                    Session["Usuario"] = sessionUser;
+                                    return RedirectToAction("Empleado");
                                 }
                                 else
                                 {
@@ -289,7 +311,7 @@ namespace MVC.Controllers
                                 }
                             }
                             else
-                            {
+                            {                              
                                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>" + respApi.Mensaje + "</center></label>');");
                                 return RedirectToAction("Index", "Principal");
                             }
@@ -516,7 +538,10 @@ namespace MVC.Controllers
                                 {
                                     Debug.WriteLine("Existoso");
                                     TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Empleado registrado correctamente.</center></label>');");
-                                    return RedirectToAction("Index", "Principal");
+
+                                    OUsuario sessionUser = JsonConvert.DeserializeObject<OUsuario>(respApi.Respuesta[0].ToString());
+                                    Session["Usuario"] = sessionUser;
+                                    return RedirectToAction("Empleado");
                                 }
                                 else
                                 {
@@ -542,6 +567,134 @@ namespace MVC.Controllers
             {
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Verificación Captcha requerida.</center></label>');");
                 return RedirectToAction("Index", "Principal");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ObtenerMenores()
+        {
+           try { 
+           var url = $"https://localhost:44335/api/Usuario/ObtenerMenores";
+            var request = (HttpWebRequest)WebRequest.Create(url);
+            string json = JsonConvert.SerializeObject("");
+            request.Method = "GET";
+            request.ContentType = "application/json";
+            request.Accept = "application/json";
+        
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+                        if (strReader == null)
+                        {
+
+                            return Json("El servidor no responde.");
+                        }
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+                            string responseBody = objReader.ReadToEnd();
+                            ORespuesta respApi = JsonConvert.DeserializeObject<ORespuesta>(responseBody);
+                            if (respApi.Exitoso)
+                            {
+                                response.Close();
+                                objReader.Close();
+                                Debug.WriteLine("Existoso");
+                                return Json(respApi);
+                                
+
+                            }
+                            else
+                            {
+                                response.Close();
+                                objReader.Close();
+                                return Json(respApi);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                return Json(ex.Message);
+            }
+            catch (Exception e)
+            {
+                return Json(e.Message);
+            }
+
+        }
+
+
+        [HttpPost]
+        public ActionResult RegistrarMenor(OMenores PmtPeticion)
+        {
+            if (string.IsNullOrEmpty(PmtPeticion.nombres) || string.IsNullOrEmpty(PmtPeticion.apellidos) ||
+                PmtPeticion.edad >= 18 || PmtPeticion.edad < 0 ||
+                PmtPeticion.edadMeses >= 12 || PmtPeticion.edadMeses < 0 ||
+                PmtPeticion.idSexo == 0 || PmtPeticion.idCentroAdopcion == 0 ||
+                string.IsNullOrEmpty(PmtPeticion.antecedentes) || PmtPeticion.cAl == 0 ||
+                PmtPeticion.cAp == 0 || PmtPeticion.cAs == 0 || PmtPeticion.cAt == 0 ||
+                PmtPeticion.cRp == 0 || PmtPeticion.cEm == 0 || PmtPeticion.cEe == 0 ||
+                PmtPeticion.cFl == 0 || PmtPeticion.cIn == 0 || PmtPeticion.cRf == 0 ||
+                PmtPeticion.cSc == 0 || PmtPeticion.cTf == 0 || PmtPeticion.cAg == 0 ||
+                PmtPeticion.cDl == 0
+                )
+            {
+
+                return Json("Asegurate de llenar todos los campos correctamente.");
+            }
+            else
+            {
+                try
+                {
+                    var url = $"https://localhost:44335/api/Usuario/RegistrarMenor";
+                    var request = (HttpWebRequest)WebRequest.Create(url);
+                    string json = JsonConvert.SerializeObject(PmtPeticion);
+                    request.Method = "POST";
+                    request.ContentType = "application/json";
+                    request.Accept = "application/json";
+                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    {
+                        streamWriter.Write(json);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+                    using (WebResponse response = request.GetResponse())
+                    {
+                        using (Stream strReader = response.GetResponseStream())
+                        {
+                            if (strReader == null)
+                            {                
+                                
+                                return Json("El servidor no responde.");
+                            }
+                            using (StreamReader objReader = new StreamReader(strReader))
+                            {
+                                string responseBody = objReader.ReadToEnd();
+                                ORespuesta respApi = JsonConvert.DeserializeObject<ORespuesta>(responseBody);
+                                if (respApi.Exitoso)
+                                {
+                                    Debug.WriteLine("Existoso");                                   
+                                    return Json("Menor registrado correctamente.");
+                                   
+                                }
+                                else
+                                {
+                                    Debug.WriteLine("ENTRA API ERROR -->"+ respApi.Mensaje);
+                                    return Json(respApi.Mensaje); 
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (WebException ex)
+                {
+                    return Json(ex.Message);
+                }
+                catch (Exception e)
+                {
+                    return Json(e.Message);
+                }
             }
         }
 
@@ -574,5 +727,6 @@ namespace MVC.Controllers
         }
 
     } 
+
 
 }

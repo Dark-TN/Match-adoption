@@ -1,0 +1,349 @@
+﻿
+@{
+    ViewBag.Title = "Match Adoption";
+    Layout = "~/Views/Shared/_MasterEmpleado.cshtml";
+}
+
+<script type="text/javascript">
+        @Html.Raw(ViewBag.Mensaje)
+</script>
+
+
+<script type="text/javascript">
+    var urlRegistrarMenor = '@Url.Action("RegistrarMenor", "Usuario")'
+    var urlListaMenores = '@Url.Action("ObtenerMenores", "Usuario")'
+</script>
+
+
+<script type="text/javascript" src="~/Scripts/Pagina/Usuario/AdminMenores.js"></script>
+<h1><br />Administrar menores en adopción</h1>
+
+
+<div class="col-sm-12 text-right">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalRegistroMenor">Agregar registro</button>
+</div>
+
+<div class="center">
+    <table id="tblAdminMenores" class="table table-striped table-bordered justify-content-center">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Edad</th>
+                <th>Centro</th>
+                <th>Recomendado</th>
+                <th>Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+
+
+<div class="modal fade" id="modalRegistroMenor" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title" id="exampleModalLongTitle">Registrar menor en adopción</h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+                <div class="modal-body">
+
+                    <div class="row row-form">
+                        <div class="col-sm-6">
+                            <label>Nombre(s):</label>
+                            <input type="text" class="form-control" id="txtModalNombreMenor" required />
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Apellidos:</label>
+                            <input type="text" class="form-control" id="txtModalApellidosMenor" required />
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Edad:</label>
+                            <label> </label>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Años:</label>
+                            <select class="form-control" id="txtModalAniosMenor">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Meses:</label>
+                            <select class="form-control" id="txtModalMesesMenor">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                            </select>
+
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Sexo:</label>
+                            <select class="form-control" name="sctSexoUsuario" id="sctSexoUsuario" required>
+                                <option value="0">Selecciona una opción</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Centro de labores:</label>
+                            <select class="form-control" name="sctCentroLabores" id="sctCentroLabores" required>
+                                <option value="0">Selecciona una opción</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12">
+                            <label>Antecedentes:</label>
+                            <input class="form-control" id="txtModalAntecedentesMenor" style="width: 100%" required />
+                        </div>
+                        <div class="col-sm-12">
+                            <label>Necesidades:</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Altruismo:</label>
+                            <select class="form-control" id="sltcAl">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Apertura:</label>
+                            <select class="form-control" id="sltcAp">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Asertividad:</label>
+                            <select class="form-control" id="sltcAs">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Autoestima:</label>
+                            <select class="form-control" id="sltcAt">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Capacidad de resolver problemas:</label>
+                            <select class="form-control" id="sltcRp">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Empatía:</label>
+                            <select class="form-control" id="sltcEm">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Equilibrio Emocional:</label>
+                            <select class="form-control" id="sltcEe">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Flexibilidad:</label>
+                            <select class="form-control" id="sltcFl">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Independencia:</label>
+                            <select class="form-control" id="sltcIn">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Reflexibidad:</label>
+                            <select class="form-control" id="sltcRf">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Sociabilidad:</label>
+                            <select class="form-control" id="sltcSc">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Tolerancia a la frustación:</label>
+                            <select class="form-control" id="sltcTf">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Capacidad de establecer vínculos afectivos o de apego :</label>
+                            <select class="form-control" id="sltcAg">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Capacidad de resolución del duelo:</label>
+                            <select class="form-control" id="sltcDl">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="confirmarRegistro">Aceptar</button>
+                </div>         
+        </div>
+    </div>
+</div>

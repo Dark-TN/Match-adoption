@@ -171,6 +171,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Negocio\AdminMenores\OMenores.cs" />
     <Compile Include="Models\Negocio\Catalogo\OCatalogo.cs" />
     <Compile Include="Models\Negocio\Test\OPregunta.cs" />
     <Compile Include="Models\Negocio\Test\OTest.cs" />
@@ -359,8 +360,10 @@
     <Content Include="Scripts\Pagina\Principal\Principal.js" />
     <Content Include="Scripts\Pagina\Registro\Registro.js" />
     <Content Include="Scripts\Pagina\Usuario\Administrador.js" />
+    <Content Include="Scripts\Pagina\Usuario\AdminMenores.js" />
     <Content Include="Scripts\Pagina\Usuario\Alumno.js" />
     <Content Include="Scripts\Pagina\Usuario\Coordinador.js" />
+    <Content Include="Scripts\Pagina\Usuario\MasterEmpleado.js" />
     <Content Include="Scripts\Pagina\Usuario\MasterSolicitante.js" />
     <Content Include="Scripts\Pagina\Usuario\Test.js" />
     <Content Include="Scripts\Pagina\Usuario\Usuario.js" />
@@ -391,6 +394,9 @@
     <Content Include="Views\Principal\Index.cshtml" />
     <Content Include="Views\Usuario\Solicitante.cshtml" />
     <Content Include="Views\Usuario\Test.cshtml" />
+    <Content Include="Views\Usuario\Empleado.cshtml" />
+    <Content Include="Views\Shared\_MenuEmpleado.cshtml" />
+    <Content Include="Views\Shared\_MasterEmpleado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
