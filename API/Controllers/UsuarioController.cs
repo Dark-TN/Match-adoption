@@ -1,12 +1,14 @@
 ﻿using API.Models.Data;
 using API.Models.Negocio.Test;
 using API.Models.Negocio.Usuario;
+using API.Models.Negocio.Menores;
 using API.Models.Peticion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using System.Collections;
 
 namespace API.Controllers
 {
@@ -65,5 +67,24 @@ namespace API.Controllers
             ORespuesta<OTest> res = _D.ListarTest(PmtPeticion);
             return Json(res);
         }
+
+        [HttpPost]
+        [ActionName("RegistrarMenor")]
+        public IHttpActionResult RegistrarMenor(OMenores PmtPeticion)
+        {
+            ORespuesta<OMenores> res = _D.RegistrarMenor(PmtPeticion);
+            return Json(res);
+        }
+        
+        
+        [HttpGet]
+        [ActionName("ObtenerMenores")]
+        public IHttpActionResult ObtenerMenores()
+        {
+            ORespuesta<ArrayList> res = _D.ObtenerMenores();
+            return Json(res);
+        }
+
+
     }
 }

@@ -165,6 +165,7 @@
     <Compile Include="Models\Data\DB.cs" />
     <Compile Include="Models\Data\DCatalogo.cs" />
     <Compile Include="Models\Data\DUsuario.cs" />
+    <Compile Include="Models\Negocio\Menores\OMenores.cs" />
     <Compile Include="Models\Negocio\Catalogo\OCatalogo.cs" />
     <Compile Include="Models\Negocio\Seguridad\EncriptadoSimetrico\OEncriptadoSimetrico.cs" />
     <Compile Include="Models\Negocio\Test\OPregunta.cs" />
