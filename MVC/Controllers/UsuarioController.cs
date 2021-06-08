@@ -62,14 +62,6 @@ namespace MVC.Controllers
         }
 
         [HttpPost]
-        public JsonResult ModificarDatosSolicitante(OUsuario PmtPeticion)
-        {
-            PmtPeticion.IdUsuario = ((OUsuario)Session["Usuario"]).IdUsuario;
-            return Json(PmtPeticion);
-        }
-
-
-        [HttpPost]
         public JsonResult CambiarContraseña(OUsuario PmtPeticion)
         {
             Debug.WriteLine("Se cambio la contraseña");
@@ -135,10 +127,9 @@ namespace MVC.Controllers
             else
             {
                 ((OTest)Session["Test"]).IdUsuario = ((OUsuario)Session["Usuario"]).IdUsuario;
-                for (int i = 0; i < ((OTest)Session["Test"]).Preguntas.Count; i++)
+                foreach(OPregunta pregunta in pmtPeticion)
                 {
-                    ((OTest)Session["Test"]).Preguntas[i].Respuesta = pmtPeticion[i].Respuesta;
-                    Debug.WriteLine("########## " + ((OTest)Session["Test"]).Preguntas[i].Respuesta.ToString() + " " + ((OTest)Session["Test"]).Preguntas[i].IdPregunta.ToString());
+                    ((OTest)Session["Test"]).Preguntas.Where(a => a.IdPregunta == pregunta.IdPregunta).ToList().ForEach(a => a.Respuesta = pregunta.Respuesta);
                 }
                 try
                 {
@@ -307,6 +298,16 @@ namespace MVC.Controllers
                                 }
                                 else
                                 {
+                                    if(respApi.Respuesta[0].IdEstatus == 2)
+                                    {
+                                        TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El usuario está inactivo. Contacta a un administrador.</center></label>');");
+                                        return RedirectToAction("Index", "Principal");
+                                    }
+                                    else if (respApi.Respuesta[0].IdEstatus == 4)
+                                    {
+                                        TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El usuario está pendiente de validación.</center></label>');");
+                                        return RedirectToAction("Index", "Principal");
+                                    }
                                     Session["Usuario"] = respApi.Respuesta[0];
                                     return RedirectToAction("Solicitante");
                                 }
@@ -468,10 +469,8 @@ namespace MVC.Controllers
                 return RedirectToAction("Index", "Principal");
             }
             char[] MyChar = { '_' };
-            Debug.WriteLine(formCollection["txtNombreEmpleado"].TrimEnd(MyChar));
 
             Match m = Regex.Match(formCollection["txtNombreEmpleado"].TrimEnd(MyChar), @"^([a-zA-ZñÑ\s]*){0,150}$", RegexOptions.IgnoreCase);
-            Debug.WriteLine(m.Success);
             if (m.Success != true)
             {
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>El formato del nombre es incorrecto.</center></label>');");
@@ -533,13 +532,10 @@ namespace MVC.Controllers
                             using (StreamReader objReader = new StreamReader(strReader))
                             {
                                 string responseBody = objReader.ReadToEnd();
-                                ORespuesta<string> respApi = JsonConvert.DeserializeObject<ORespuesta<string>>(responseBody);
+                                ORespuesta<OUsuario> respApi = JsonConvert.DeserializeObject<ORespuesta<OUsuario>>(responseBody);
                                 if (respApi.Exitoso)
                                 {
-                                    Debug.WriteLine("Existoso");
-                                    TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Empleado registrado correctamente.</center></label>');");
-
-                                    OUsuario sessionUser = JsonConvert.DeserializeObject<OUsuario>(respApi.Respuesta[0].ToString());
+                                    OUsuario sessionUser = respApi.Respuesta[0];
                                     Session["Usuario"] = sessionUser;
                                     return RedirectToAction("Empleado");
                                 }
@@ -573,61 +569,51 @@ namespace MVC.Controllers
         [HttpPost]
         public ActionResult ObtenerMenores()
         {
-           try { 
-           var url = $"https://localhost:44335/api/Usuario/ObtenerMenores";
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            string json = JsonConvert.SerializeObject("");
-            request.Method = "GET";
-            request.ContentType = "application/json";
-            request.Accept = "application/json";
-        
+            ORespuesta<string> res = new ORespuesta<string>();
+            try 
+            {
+                var url = $"https://localhost:44335/api/Usuario/ObtenerMenores";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "GET";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
                 using (WebResponse response = request.GetResponse())
                 {
                     using (Stream strReader = response.GetResponseStream())
                     {
                         if (strReader == null)
                         {
-
-                            return Json("El servidor no responde.");
+                            res.Exitoso = false;
+                            return Json(res);
                         }
                         using (StreamReader objReader = new StreamReader(strReader))
                         {
                             string responseBody = objReader.ReadToEnd();
-                            ORespuesta<ArrayList> respApi = JsonConvert.DeserializeObject<ORespuesta<ArrayList>>(responseBody);
-                            if (respApi.Exitoso)
-                            {
-                                response.Close();
-                                objReader.Close();
-                                Debug.WriteLine("Existoso");
-                                return Json(respApi);
-                                
-
-                            }
-                            else
-                            {
-                                response.Close();
-                                objReader.Close();
-                                return Json(respApi);
-                            }
+                            ORespuesta<OMenores> respApi = JsonConvert.DeserializeObject<ORespuesta<OMenores>>(responseBody);
+                            return Json(respApi);
                         }
                     }
                 }
             }
             catch (WebException ex)
             {
-                return Json(ex.Message);
+                res.Mensaje = ex.Message;
+                res.Exitoso = false;
+                return Json(res);
             }
             catch (Exception e)
             {
-                return Json(e.Message);
+                res.Mensaje = e.Message;
+                res.Exitoso = false;
+                return Json(res);
             }
-
         }
 
 
         [HttpPost]
         public ActionResult RegistrarMenor(OMenores PmtPeticion)
         {
+            ORespuesta<string> res = new ORespuesta<string>();
             if (string.IsNullOrEmpty(PmtPeticion.nombres) || string.IsNullOrEmpty(PmtPeticion.apellidos) ||
                 PmtPeticion.edad >= 18 || PmtPeticion.edad < 0 ||
                 PmtPeticion.edadMeses >= 12 || PmtPeticion.edadMeses < 0 ||
@@ -640,13 +626,15 @@ namespace MVC.Controllers
                 PmtPeticion.cDl == 0
                 )
             {
-
-                return Json("Asegurate de llenar todos los campos correctamente.");
+                res.Exitoso = false;
+                res.Mensaje = "Asegurate de llenar todos los campos correctamente.";
+                return Json(res);
             }
             else
             {
                 try
                 {
+                    PmtPeticion.IdUsuario = ((OUsuario)Session["Usuario"]).IdUsuario;
                     var url = $"https://localhost:44335/api/Usuario/RegistrarMenor";
                     var request = (HttpWebRequest)WebRequest.Create(url);
                     string json = JsonConvert.SerializeObject(PmtPeticion);
@@ -664,36 +652,31 @@ namespace MVC.Controllers
                         using (Stream strReader = response.GetResponseStream())
                         {
                             if (strReader == null)
-                            {                
-                                
-                                return Json("El servidor no responde.");
+                            {
+                                res.Exitoso = false;
+                                res.Mensaje = "El servidor no responde.";
+                                return Json(res);
                             }
                             using (StreamReader objReader = new StreamReader(strReader))
                             {
                                 string responseBody = objReader.ReadToEnd();
-                                ORespuesta<OMenores> respApi = JsonConvert.DeserializeObject<ORespuesta<OMenores>>(responseBody);
-                                if (respApi.Exitoso)
-                                {
-                                    Debug.WriteLine("Existoso");                                   
-                                    return Json("Menor registrado correctamente.");
-                                   
-                                }
-                                else
-                                {
-                                    Debug.WriteLine("ENTRA API ERROR -->"+ respApi.Mensaje);
-                                    return Json(respApi.Mensaje); 
-                                }
+                                ORespuesta<string> respApi = JsonConvert.DeserializeObject<ORespuesta<string>>(responseBody);
+                                return Json(respApi);
                             }
                         }
                     }
                 }
                 catch (WebException ex)
                 {
-                    return Json(ex.Message);
+                    res.Exitoso = false;
+                    res.Mensaje = ex.Message;
+                    return Json(res);
                 }
                 catch (Exception e)
                 {
-                    return Json(e.Message);
+                    res.Exitoso = false;
+                    res.Mensaje = e.Message;
+                    return Json(res);
                 }
             }
         }
@@ -758,9 +741,479 @@ namespace MVC.Controllers
                         {
                             string responseBody = objReader.ReadToEnd();
                             ORespuesta<OTest> respApi = JsonConvert.DeserializeObject<ORespuesta<OTest>>(responseBody);
-                            foreach(KeyValuePair<string, int> key in respApi.Respuesta[0].CalificacionesHabilidades)
+                            return Json(respApi);
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                res.Mensaje = ex.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+            catch (Exception e)
+            {
+                res.Mensaje = e.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Match()
+        {
+            ORespuesta<OMenores> res = new ORespuesta<OMenores>();
+            try
+            {
+                var url = $"https://localhost:44335/api/Usuario/Match";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                string json = JsonConvert.SerializeObject(((OUsuario)Session["Usuario"]));
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+                        if (strReader == null)
+                        {
+                            res.Mensaje = "El servidor no responde.";
+                            res.Exitoso = false;
+                            return Json(res);
+                        }
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+                            string responseBody = objReader.ReadToEnd();
+                            ORespuesta<OMenores> respApi = JsonConvert.DeserializeObject<ORespuesta<OMenores>>(responseBody);
+                            respApi.Respuesta = respApi.Respuesta.OrderByDescending(o => o.Porcentaje).ToList();
+                            return Json(respApi);
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                res.Mensaje = ex.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+            catch (Exception e)
+            {
+                res.Mensaje = e.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult IniciarTramiteAdopcion(OMenores PmtPeticion)
+        {
+            ORespuesta<string> res = new ORespuesta<string>();
+            try
+            {
+                var url = $"https://localhost:44335/api/Usuario/IniciarTramiteAdopcion";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                OTramiteAdopcion req = new OTramiteAdopcion();
+                req.IdUsuario = ((OUsuario)Session["Usuario"]).IdUsuario;
+                req.IdMenorAdopcion = PmtPeticion.idMenorAdopcion;
+                string json = JsonConvert.SerializeObject(req);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+                        if (strReader == null)
+                        {
+                            res.Mensaje = "El servidor no responde.";
+                            res.Exitoso = false;
+                            return Json(res);
+                        }
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+                            string responseBody = objReader.ReadToEnd();
+                            ORespuesta<string> respApi = JsonConvert.DeserializeObject<ORespuesta<string>>(responseBody);
+                            return Json(respApi);
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                res.Mensaje = ex.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+            catch (Exception e)
+            {
+                res.Mensaje = e.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ListaTramitesAdopcionUsuario()
+        {
+            ORespuesta<string> res = new ORespuesta<string>();
+            try
+            {
+                var url = $"https://localhost:44335/api/Usuario/ListaTramitesAdopcionUsuario";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                string json = JsonConvert.SerializeObject(((OUsuario)Session["Usuario"]));
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+                        if (strReader == null)
+                        {
+                            res.Mensaje = "El servidor no responde.";
+                            res.Exitoso = false;
+                            return Json(res);
+                        }
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+                            string responseBody = objReader.ReadToEnd();
+                            ORespuesta<OTramiteAdopcion> respApi = JsonConvert.DeserializeObject<ORespuesta<OTramiteAdopcion>>(responseBody);
+                            return Json(respApi);
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                res.Mensaje = ex.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+            catch (Exception e)
+            {
+                res.Mensaje = e.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult DetalleMenor(OMenores PmtPeticion)
+        {
+            ORespuesta<OMenores> res = new ORespuesta<OMenores>();
+            try
+            {
+                var url = $"https://localhost:44335/api/Usuario/DetalleMenor";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                string json = JsonConvert.SerializeObject(PmtPeticion);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+                        if (strReader == null)
+                        {
+                            res.Mensaje = "El servidor no responde.";
+                            res.Exitoso = false;
+                            return Json(res);
+                        }
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+                            string responseBody = objReader.ReadToEnd();
+                            ORespuesta<OMenores> respApi = JsonConvert.DeserializeObject<ORespuesta<OMenores>>(responseBody);
+                            return Json(respApi);
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                res.Mensaje = ex.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+            catch (Exception e)
+            {
+                res.Mensaje = e.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ModificarMenor(OMenores PmtPeticion)
+        {
+            ORespuesta<string> res = new ORespuesta<string>();
+            if (string.IsNullOrEmpty(PmtPeticion.nombres) || string.IsNullOrEmpty(PmtPeticion.apellidos) ||
+                PmtPeticion.edad >= 18 || PmtPeticion.edad < 0 ||
+                PmtPeticion.edadMeses >= 12 || PmtPeticion.edadMeses < 0 ||
+                PmtPeticion.idSexo == 0 || PmtPeticion.idCentroAdopcion == 0 ||
+                string.IsNullOrEmpty(PmtPeticion.antecedentes) || PmtPeticion.cAl == 0 ||
+                PmtPeticion.cAp == 0 || PmtPeticion.cAs == 0 || PmtPeticion.cAt == 0 ||
+                PmtPeticion.cRp == 0 || PmtPeticion.cEm == 0 || PmtPeticion.cEe == 0 ||
+                PmtPeticion.cFl == 0 || PmtPeticion.cIn == 0 || PmtPeticion.cRf == 0 ||
+                PmtPeticion.cSc == 0 || PmtPeticion.cTf == 0 || PmtPeticion.cAg == 0 ||
+                PmtPeticion.cDl == 0
+                )
+            {
+                res.Exitoso = false;
+                res.Mensaje = "Asegurate de llenar todos los campos correctamente.";
+                return Json(res);
+            }
+            else
+            {
+                try
+                {
+                    PmtPeticion.IdUsuario = ((OUsuario)Session["Usuario"]).IdUsuario;
+                    var url = $"https://localhost:44335/api/Usuario/ModificarMenor";
+                    var request = (HttpWebRequest)WebRequest.Create(url);
+                    string json = JsonConvert.SerializeObject(PmtPeticion);
+                    request.Method = "POST";
+                    request.ContentType = "application/json";
+                    request.Accept = "application/json";
+                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    {
+                        streamWriter.Write(json);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+                    using (WebResponse response = request.GetResponse())
+                    {
+                        using (Stream strReader = response.GetResponseStream())
+                        {
+                            if (strReader == null)
                             {
-                                Debug.WriteLine("####### " + key.Key + " " + key.Value.ToString());
+                                res.Mensaje = "El servidor no responde.";
+                                res.Exitoso = false;
+                                return Json(res);
+                            }
+                            using (StreamReader objReader = new StreamReader(strReader))
+                            {
+                                string responseBody = objReader.ReadToEnd();
+                                ORespuesta<string> respApi = JsonConvert.DeserializeObject<ORespuesta<string>>(responseBody);
+                                return Json(respApi);
+                            }
+                        }
+                    }
+                }
+                catch (WebException ex)
+                {
+                    res.Mensaje = ex.Message;
+                    res.Exitoso = false;
+                    return Json(res);
+                }
+                catch (Exception e)
+                {
+                    res.Mensaje = e.Message;
+                    res.Exitoso = false;
+                    return Json(res);
+                }
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ListaTramitesAdopcion()
+        {
+            ORespuesta<string> res = new ORespuesta<string>();
+            try
+            {
+                var url = $"https://localhost:44335/api/Usuario/ListaTramitesAdopcion";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "GET";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+                        if (strReader == null)
+                        {
+                            res.Mensaje = "El servidor no responde.";
+                            res.Exitoso = false;
+                            return Json(res);
+                        }
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+                            string responseBody = objReader.ReadToEnd();
+                            ORespuesta<OTramiteAdopcion> respApi = JsonConvert.DeserializeObject<ORespuesta<OTramiteAdopcion>>(responseBody);
+                            return Json(respApi);
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                res.Mensaje = ex.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+            catch (Exception e)
+            {
+                res.Mensaje = e.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ModificarEstatusTramite(OTramiteAdopcion PmtPeticion)
+        {
+            ORespuesta<string> res = new ORespuesta<string>();
+            try
+            {
+                var url = $"https://localhost:44335/api/Usuario/ModificarEstatusTramite";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                string json = JsonConvert.SerializeObject(PmtPeticion);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+                        if (strReader == null)
+                        {
+                            res.Mensaje = "El servidor no responde.";
+                            res.Exitoso = false;
+                            return Json(res);
+                        }
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+                            string responseBody = objReader.ReadToEnd();
+                            ORespuesta<string> respApi = JsonConvert.DeserializeObject<ORespuesta<string>>(responseBody);
+                            return Json(respApi);
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                res.Mensaje = ex.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+            catch (Exception e)
+            {
+                res.Mensaje = e.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ListaEvaluaciones()
+        {
+            ORespuesta<string> res = new ORespuesta<string>();
+            try
+            {
+                var url = $"https://localhost:44335/api/Usuario/ListaEvaluaciones";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "GET";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+                        if (strReader == null)
+                        {
+                            res.Mensaje = "El servidor no responde.";
+                            res.Exitoso = false;
+                            return Json(res);
+                        }
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+                            string responseBody = objReader.ReadToEnd();
+                            ORespuesta<OUsuario> respApi = JsonConvert.DeserializeObject<ORespuesta<OUsuario>>(responseBody);
+                            return Json(respApi);
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                res.Mensaje = ex.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+            catch (Exception e)
+            {
+                res.Mensaje = e.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ModificarSolicitante(OUsuario PmtPeticion)
+        {
+            ORespuesta<string> res = new ORespuesta<string>();
+            try
+            {
+                PmtPeticion.IdUsuario = ((OUsuario)Session["Usuario"]).IdUsuario;
+                var url = $"https://localhost:44335/api/Usuario/ModificarSolicitante";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                string json = JsonConvert.SerializeObject(PmtPeticion);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+                        if (strReader == null)
+                        {
+                            res.Mensaje = "El servidor no responde.";
+                            res.Exitoso = false;
+                            return Json(res);
+                        }
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+                            string responseBody = objReader.ReadToEnd();
+                            ORespuesta<OUsuario> respApi = JsonConvert.DeserializeObject<ORespuesta<OUsuario>>(responseBody);
+                            if (respApi.Exitoso)
+                            {
+                                Session["Usuario"] = respApi.Respuesta[0];
                             }
                             return Json(respApi);
                         }
@@ -771,18 +1224,109 @@ namespace MVC.Controllers
             {
                 res.Mensaje = ex.Message;
                 res.Exitoso = false;
-                Debug.WriteLine("####### " + ex.Message);
                 return Json(res);
             }
             catch (Exception e)
             {
                 res.Mensaje = e.Message;
                 res.Exitoso = false;
-                Debug.WriteLine("####### " + e.Message);
+                return Json(res);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ModificarEstatusSolicitante(OUsuario PmtPeticion)
+        {
+            ORespuesta<string> res = new ORespuesta<string>();
+            try
+            {
+                var url = $"https://localhost:44335/api/Usuario/ModificarEstatusSolicitante";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                string json = JsonConvert.SerializeObject(PmtPeticion);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+                        if (strReader == null)
+                        {
+                            res.Mensaje = "El servidor no responde.";
+                            res.Exitoso = false;
+                            return Json(res);
+                        }
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+                            string responseBody = objReader.ReadToEnd();
+                            ORespuesta<string> respApi = JsonConvert.DeserializeObject<ORespuesta<string>>(responseBody);
+                            return Json(respApi);
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                res.Mensaje = ex.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+            catch (Exception e)
+            {
+                res.Mensaje = e.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ListaSolicitantes()
+        {
+            ORespuesta<string> res = new ORespuesta<string>();
+            try
+            {
+                var url = $"https://localhost:44335/api/Usuario/ListaSolicitantes";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "GET";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+                        if (strReader == null)
+                        {
+                            res.Mensaje = "El servidor no responde.";
+                            res.Exitoso = false;
+                            return Json(res);
+                        }
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+                            string responseBody = objReader.ReadToEnd();
+                            ORespuesta<OUsuario> respApi = JsonConvert.DeserializeObject<ORespuesta<OUsuario>>(responseBody);
+                            return Json(respApi);
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                res.Mensaje = ex.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+            catch (Exception e)
+            {
+                res.Mensaje = e.Message;
+                res.Exitoso = false;
                 return Json(res);
             }
         }
     } 
-
-
 }

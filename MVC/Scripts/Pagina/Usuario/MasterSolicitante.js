@@ -186,13 +186,21 @@ function editarDatosUsuario() {
         ({
             type: 'POST',
             data: pmtPeticion,
-            url: urlModificarDatosSolicitante,
+            url: urlModificarSolicitante,
             beforeSend: function () {
                 MensajeCargando();
             },
             success: function (data) {
                 bootbox.hideAll();
-                alert(data.Nombre);
+                $("#myModal").modal('hide');
+                if (data.Exitoso === false) {
+                    bootbox.alert(data.Mensaje);
+                }
+                else {
+                    bootbox.alert("Se modificó la información correctamente.");
+                    $("#userName").text(data.Respuesta[0].Nombre);
+                }
+                
             }
         });
 }

@@ -16,6 +16,7 @@ using System.Security.Cryptography;
 using System.Web;
 using System.Web.Helpers;
 using Microsoft.Ajax.Utilities;
+using API.Models.Negocio.Recomendacion;
 
 namespace API.Models.Data
 {
@@ -60,7 +61,12 @@ namespace API.Models.Data
                         if (user.IdEstatus == 2)
                         {
                             Ls.Exitoso = false;
-                            Ls.Mensaje = "El usuario está inactivo.";
+                            Ls.Mensaje = "El usuario está inactivo. Contacta a un administrador.";
+                        }
+                        else if (user.IdEstatus == 4)
+                        {
+                            Ls.Exitoso = false;
+                            Ls.Mensaje = "El usuario está pendiente de validación.";
                         }
                         else
                         {
@@ -288,7 +294,24 @@ namespace API.Models.Data
                         {"@idUsuario", PmtPeticion.IdUsuario},
                         {"@fechaInicio", PmtPeticion.FechaInicio },
                         {"@fechaFin", PmtPeticion.FechaFin },
-                        {"@idEstiloCrianza", PmtPeticion.IdEstiloCrianza }
+                        {"@idEstiloCrianza", PmtPeticion.IdEstiloCrianza },
+                        {"@cAl", PmtPeticion.CalificacionesHabilidades["14"] },
+                        {"@cAp", PmtPeticion.CalificacionesHabilidades["1"] },
+                        {"@cAs", PmtPeticion.CalificacionesHabilidades["15"] },
+                        {"@cAt", PmtPeticion.CalificacionesHabilidades["3"] },
+                        {"@cRp", PmtPeticion.CalificacionesHabilidades["13"] },
+                        {"@cEm", PmtPeticion.CalificacionesHabilidades["8"] },
+                        {"@cEe", PmtPeticion.CalificacionesHabilidades["2"] },
+                        {"@cIn", PmtPeticion.CalificacionesHabilidades["4"] },
+                        {"@cFl", PmtPeticion.CalificacionesHabilidades["9"] },
+                        {"@cRf", PmtPeticion.CalificacionesHabilidades["7"] },
+                        {"@cSc", PmtPeticion.CalificacionesHabilidades["6"] },
+                        {"@cTf", PmtPeticion.CalificacionesHabilidades["11"] },
+                        {"@cAg", PmtPeticion.CalificacionesHabilidades["16"] },
+                        {"@cDl", PmtPeticion.CalificacionesHabilidades["12"] },
+                        {"@cCr", PmtPeticion.CalificacionesHabilidades["17"] },
+                        {"@cDs", PmtPeticion.CalificacionesHabilidades["5"] },
+                        {"@cVl", PmtPeticion.CalificacionesHabilidades["10"] }
                     };
                     DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_insert_test", Parametros, cadenaConexionLocal);
                     if (ds.Tables.Count > 0)
@@ -317,16 +340,6 @@ namespace API.Models.Data
                                         {"@respuesta", pregunta.Respuesta }
                                     };
                                     ds = DB.EjecutaProcedimientoAlmacenado("sp_insert_respuestas_test", Parametros, cadenaConexionLocal);
-                                }
-                                foreach (KeyValuePair<string, int> calificacion in PmtPeticion.CalificacionesHabilidades)
-                                {
-                                    Parametros = new Hashtable()
-                                    {
-                                        {"@idTest", PmtPeticion.IdTest},
-                                        {"@idHabilidad", int.Parse(calificacion.Key) },
-                                        {"@calificacion", calificacion.Value }
-                                    };
-                                    ds = DB.EjecutaProcedimientoAlmacenado("sp_insert_calificacion_habilidades_test", Parametros, cadenaConexionLocal);
                                 }
                                 Ls.Exitoso = true;
                             }
@@ -365,7 +378,7 @@ namespace API.Models.Data
                     Ls.Mensaje = "Asegurate de llenar todos los datos correctamente";
                     return Ls;
                 }
-                if (!PmtPeticion.NuevaPassword.Equals(PmtPeticion.ConfirmarPassword))
+                if (!string.IsNullOrEmpty(PmtPeticion.NuevaPassword) && !PmtPeticion.NuevaPassword.Equals(PmtPeticion.ConfirmarPassword))
                 {
                     Ls.Exitoso = false;
                     Ls.Mensaje = "Las contraseñas no coinciden";
@@ -383,8 +396,47 @@ namespace API.Models.Data
                         OUsuario user = new OUsuario();
                         user.PasswordEncriptada = ds.Tables[0].Rows[0]["password"].ToString();
                         user.PasswordPrivada = ds.Tables[0].Rows[0]["passwordPrivada"].ToString();
-
-                        Ls.Exitoso = true;
+                        if (PmtPeticion.Password.Equals(OEncriptadoSimetrico.Decrypt<RijndaelManaged>(user.PasswordEncriptada, user.PasswordPrivada)))
+                        {
+                            Parametros = new Hashtable()
+                            {
+                                { "@idUsuario", PmtPeticion.IdUsuario },
+                                { "@usuario", PmtPeticion.CorreoElectronico },
+                                { "@nombre", PmtPeticion.Nombre },
+                                { "@idEstadoCivil", PmtPeticion.IdEstadoCivil },
+                                { "@ocupacion", PmtPeticion.Ocupacion },
+                                { "@idNivelEstudios", PmtPeticion.IdNivelEstudios },
+                                { "@email", PmtPeticion.CorreoElectronico },
+                                { "@telefono", PmtPeticion.Telefono },
+                                { "@curp", PmtPeticion.CURP },
+                                { "@direccion", PmtPeticion.Direccion },
+                                { "@idSexo", PmtPeticion.IdSexo },
+                                { "@fechaNacimiento", PmtPeticion.FechaNacimiento }
+                            };
+                            ds = DB.EjecutaProcedimientoAlmacenado("sp_update_solicitante", Parametros, cadenaConexionLocal);
+                            if(!string.IsNullOrEmpty(PmtPeticion.NuevaPassword))
+                            {
+                                PmtPeticion.GenerarPasswordPrivada();
+                                PmtPeticion.PasswordEncriptada = OEncriptadoSimetrico.Encrypt<RijndaelManaged>(PmtPeticion.NuevaPassword, PmtPeticion.PasswordPrivada);
+                                Parametros = new Hashtable()
+                                {
+                                    { "@idUsuario", PmtPeticion.IdUsuario },
+                                    { "@password", PmtPeticion.PasswordEncriptada },
+                                    { "@passwordPrivada", PmtPeticion.PasswordPrivada }
+                                };
+                                ds = DB.EjecutaProcedimientoAlmacenado("sp_update_password", Parametros, cadenaConexionLocal);
+                            }
+                            PmtPeticion.Password = string.Empty;
+                            PmtPeticion.NuevaPassword = string.Empty;
+                            PmtPeticion.PasswordEncriptada = string.Empty;
+                            Ls.Exitoso = true;
+                            Ls.Respuesta.Add(PmtPeticion);
+                        }
+                        else
+                        {
+                            Ls.Exitoso = false;
+                            Ls.Mensaje = "La contraseña es incorrecta.";
+                        }
                     }
                 }
                 return Ls;
@@ -495,9 +547,9 @@ namespace API.Models.Data
         }
 
 
-        public ORespuesta<OMenores> RegistrarMenor(OMenores PmtPeticion)
+        public ORespuesta<string> RegistrarMenor(OMenores PmtPeticion)
         {
-            ORespuesta<OMenores> Ls = new ORespuesta<OMenores>();
+            ORespuesta<string> Ls = new ORespuesta<string>();
             try
             {
                 Hashtable Parametros = new Hashtable()
@@ -506,8 +558,6 @@ namespace API.Models.Data
                     {"@apellidos", PmtPeticion.apellidos},
                     {"@idSexo", PmtPeticion.idSexo },
                     {"@idCentroAdopcion", PmtPeticion.idCentroAdopcion }
-
-
                 };
                 Debug.WriteLine(PmtPeticion.nombres);
                 Debug.WriteLine(PmtPeticion.apellidos);
@@ -522,9 +572,9 @@ namespace API.Models.Data
                         int res = int.Parse(ds.Tables[0].Rows[0]["result"].ToString());
                         if (res == 0)
                         {
-                            OMenores menor = new OMenores();
                             Parametros = new Hashtable()
                             {
+                                {"@IdUsuario", PmtPeticion.IdUsuario },
                                 {"@nombres", PmtPeticion.nombres},
                                 {"@apellidos", PmtPeticion.apellidos},
                                 {"@idSexo", PmtPeticion.idSexo },
@@ -548,35 +598,7 @@ namespace API.Models.Data
                                 {"@edadMeses", PmtPeticion.edadMeses }
                             };
                             ds = DB.EjecutaProcedimientoAlmacenado("sp_select_agregar_menor", Parametros, cadenaConexionLocal);
-                            if (ds.Tables[0].Rows.Count > 0)
-                            {
-                                res = int.Parse(ds.Tables[0].Rows[0]["idMenorAdopcion"].ToString());
-                                menor.idMenorAdopcion = res;
-                            }
-                            menor.idEstatus = PmtPeticion.idEstatus;
-                            menor.nombres = PmtPeticion.nombres;
-                            menor.apellidos = PmtPeticion.apellidos;
-                            menor.idSexo = PmtPeticion.idSexo;
-                            menor.antecedentes = PmtPeticion.antecedentes;
-                            menor.idCentroAdopcion = PmtPeticion.idCentroAdopcion;
-                            menor.cAl = PmtPeticion.cAl;
-                            menor.cAp = PmtPeticion.cAp;
-                            menor.cAs = PmtPeticion.cAs;
-                            menor.cRp = PmtPeticion.cRp;
-                            menor.cEm = PmtPeticion.cEm;
-                            menor.cEe = PmtPeticion.cEe;
-                            menor.cIn = PmtPeticion.cIn;
-                            menor.cFl = PmtPeticion.cFl;
-                            menor.cRf = PmtPeticion.cRf;
-                            menor.cSc = PmtPeticion.cSc;
-                            menor.cTf = PmtPeticion.cTf;
-                            menor.cAg = PmtPeticion.cAg;
-                            menor.cDl = PmtPeticion.cDl;
-                            menor.edad = PmtPeticion.edad;
-                            menor.edadMeses = PmtPeticion.edadMeses;
                             Ls.Exitoso = true;
-                            Ls.Respuesta.Add(menor);
-
                         }
                         else
                         {
@@ -603,48 +625,29 @@ namespace API.Models.Data
         }
 
 
-        public ORespuesta<ArrayList> ObtenerMenores()
+        public ORespuesta<OMenores> ObtenerMenores()
         {
-            ORespuesta<ArrayList> Ls = new ORespuesta<ArrayList>();
+            ORespuesta<OMenores> Ls = new ORespuesta<OMenores>();
             try
             {
                 Hashtable Parametros = new Hashtable();
-                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_lista_men_adopcion", Parametros, cadenaConexionLocal);
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_lista_menores", Parametros, cadenaConexionLocal);
                 if (ds.Tables.Count > 0)
                 {
                     if (ds.Tables[0].Rows.Count > 0)
                     {
-                        ArrayList listMenores = new ArrayList();
-                        for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                        foreach (DataRow row in ds.Tables[0].Rows)
                         {
                             OMenores menor = new OMenores();
-                            menor.idMenorAdopcion = int.Parse(ds.Tables[0].Rows[i]["idMenorAdopcion"].ToString());
-                            menor.idEstatus = int.Parse(ds.Tables[0].Rows[i]["idEstatus"].ToString());
-                            menor.idSexo = int.Parse(ds.Tables[0].Rows[i]["idSexo"].ToString());
-                            menor.idCentroAdopcion = int.Parse(ds.Tables[0].Rows[i]["idCentroAdopcion"].ToString());
-                            menor.nombres = ds.Tables[0].Rows[i]["nombres"].ToString();
-                            menor.apellidos = ds.Tables[0].Rows[i]["apellidos"].ToString();
-                            menor.antecedentes = ds.Tables[0].Rows[i]["antecedentes"].ToString();
-                            menor.cAl = int.Parse(ds.Tables[0].Rows[i]["cAl"].ToString());
-                            menor.cAp = int.Parse(ds.Tables[0].Rows[i]["cAp"].ToString());
-                            menor.cAs = int.Parse(ds.Tables[0].Rows[i]["cAs"].ToString());
-                            menor.cAt = int.Parse(ds.Tables[0].Rows[i]["cAt"].ToString());
-                            menor.cRp = int.Parse(ds.Tables[0].Rows[i]["cRp"].ToString());
-                            menor.cEm = int.Parse(ds.Tables[0].Rows[i]["cEm"].ToString());
-                            menor.cEe = int.Parse(ds.Tables[0].Rows[i]["cEe"].ToString());
-                            menor.cIn = int.Parse(ds.Tables[0].Rows[i]["cIn"].ToString());
-                            menor.cFl = int.Parse(ds.Tables[0].Rows[i]["cFl"].ToString());
-                            menor.cRf = int.Parse(ds.Tables[0].Rows[i]["cRf"].ToString());
-                            menor.cTf = int.Parse(ds.Tables[0].Rows[i]["cTf"].ToString());
-                            menor.cSc = int.Parse(ds.Tables[0].Rows[i]["cSc"].ToString());
-                            menor.cAg = int.Parse(ds.Tables[0].Rows[i]["cAg"].ToString());
-                            menor.cDl = int.Parse(ds.Tables[0].Rows[i]["cDl"].ToString());
-                            menor.edad = int.Parse(ds.Tables[0].Rows[i]["edad"].ToString());
-                            menor.edadMeses = int.Parse(ds.Tables[0].Rows[i]["edadMeses"].ToString());
-                            listMenores.Add(menor);
+                            menor.idMenorAdopcion = int.Parse(row["idMenorAdopcion"].ToString());
+                            menor.nombres = row["nombres"].ToString();
+                            menor.antecedentes = row["antecedentes"].ToString();
+                            menor.EdadTexto = row["edadTexto"].ToString();
+                            menor.CentroAdopcion = row["centroAdopcion"].ToString();
+                            menor.Estatus = row["estatus"].ToString();
+                            Ls.Respuesta.Add(menor);
                         }
                         Ls.Exitoso = true;
-                        Ls.Respuesta.Add(listMenores);
                         return Ls;
                     }
                     else
@@ -673,13 +676,6 @@ namespace API.Models.Data
             }
         }
 
-
-
-
-
-
-
-
         public ORespuesta<OTest> ListarTest(OUsuario PmtPeticion)
         {
             ORespuesta<OTest> Ls = new ORespuesta<OTest>();
@@ -692,22 +688,32 @@ namespace API.Models.Data
                 DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_lista_tests", Parametros, cadenaConexionLocal);
                 if (ds.Tables.Count > 0)
                 {
-                    if (ds.Tables.Count > 0)
+                    if (ds.Tables[0].Rows.Count > 0)
                     {
-                        if (ds.Tables[0].Rows.Count > 0)
+                        foreach (DataRow row in ds.Tables[0].Rows)
                         {
                             OTest _Dato = new OTest();
-                            foreach (DataRow row in ds.Tables[0].Rows)
-                            {
-                                _Dato.IdTest = int.Parse(row["idTest"].ToString());
-                                _Dato.FechaInicio = DateTime.Parse(row["fechaInicio"].ToString());
-                                _Dato.FechaFin = DateTime.Parse(row["fechaFin"].ToString());
-                                _Dato.EstiloCrianza = row["estiloCrianza"].ToString();
-                                _Dato.CalificacionesHabilidades.Add(row["habilidad"].ToString(), int.Parse(row["calificacion"].ToString()));
-                            }
+                            _Dato.IdTest = int.Parse(row["idTest"].ToString());
+                            _Dato.FechaInicio = DateTime.Parse(row["fechaInicio"].ToString());
+                            _Dato.FechaFin = DateTime.Parse(row["fechaFin"].ToString());
+                            _Dato.EstiloCrianza = row["estiloCrianza"].ToString();
+                            _Dato.CalificacionesHabilidades.Add("Altruismo", int.Parse(row["cAl"].ToString()));
+                            _Dato.CalificacionesHabilidades.Add("Apertura", int.Parse(row["cAp"].ToString()));
+                            _Dato.CalificacionesHabilidades.Add("Asertividad", int.Parse(row["cAs"].ToString()));
+                            _Dato.CalificacionesHabilidades.Add("Autoestima", int.Parse(row["cAt"].ToString()));
+                            _Dato.CalificacionesHabilidades.Add("Resolución de problemas", int.Parse(row["cRp"].ToString()));
+                            _Dato.CalificacionesHabilidades.Add("Empatía", int.Parse(row["cEm"].ToString()));
+                            _Dato.CalificacionesHabilidades.Add("Equilibrio emocional", int.Parse(row["cEe"].ToString()));
+                            _Dato.CalificacionesHabilidades.Add("Independencia", int.Parse(row["cIn"].ToString()));
+                            _Dato.CalificacionesHabilidades.Add("Flexibilidad", int.Parse(row["cFl"].ToString()));
+                            _Dato.CalificacionesHabilidades.Add("Reflexividad", int.Parse(row["cRf"].ToString()));
+                            _Dato.CalificacionesHabilidades.Add("Sociabilidad", int.Parse(row["cSc"].ToString()));
+                            _Dato.CalificacionesHabilidades.Add("Tolerancia a la frustración", int.Parse(row["cTf"].ToString()));
+                            _Dato.CalificacionesHabilidades.Add("Establecer vínculos afectivos", int.Parse(row["cAg"].ToString()));
+                            _Dato.CalificacionesHabilidades.Add("Resolución de duelo", int.Parse(row["cDl"].ToString()));
                             Ls.Respuesta.Add(_Dato);
-                            Ls.Exitoso = true;
                         }
+                        Ls.Exitoso = true;
                     }
                 }
                 return Ls;
@@ -726,6 +732,512 @@ namespace API.Models.Data
             }
         }
 
+        public ORespuesta<OMenores> Match(OUsuario PmtPeticion)
+        {
+            ORespuesta<OMenores> Ls = new ORespuesta<OMenores>();
+            OTest _Dato = new OTest();
+            try
+            {
+                Hashtable Parametros = new Hashtable()
+                {
+                    {"@idUsuario", PmtPeticion.IdUsuario}
+                };
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_ultimo_test", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        _Dato.IdTest = int.Parse(ds.Tables[0].Rows[0]["idTest"].ToString());
+                        _Dato.FechaInicio = DateTime.Parse(ds.Tables[0].Rows[0]["fechaInicio"].ToString());
+                        _Dato.FechaFin = DateTime.Parse(ds.Tables[0].Rows[0]["fechaFin"].ToString());
+                        _Dato.IdEstiloCrianza = int.Parse(ds.Tables[0].Rows[0]["idEstiloCrianza"].ToString());
+                        _Dato.CalificacionesHabilidades.Add("cAl", int.Parse(ds.Tables[0].Rows[0]["cAl"].ToString()));
+                        _Dato.CalificacionesHabilidades.Add("cAp", int.Parse(ds.Tables[0].Rows[0]["cAp"].ToString()));
+                        _Dato.CalificacionesHabilidades.Add("cAs", int.Parse(ds.Tables[0].Rows[0]["cAs"].ToString()));
+                        _Dato.CalificacionesHabilidades.Add("cAt", int.Parse(ds.Tables[0].Rows[0]["cAt"].ToString()));
+                        _Dato.CalificacionesHabilidades.Add("cRp", int.Parse(ds.Tables[0].Rows[0]["cRp"].ToString()));
+                        _Dato.CalificacionesHabilidades.Add("cEm", int.Parse(ds.Tables[0].Rows[0]["cEm"].ToString()));
+                        _Dato.CalificacionesHabilidades.Add("cEe", int.Parse(ds.Tables[0].Rows[0]["cEe"].ToString()));
+                        _Dato.CalificacionesHabilidades.Add("cIn", int.Parse(ds.Tables[0].Rows[0]["cIn"].ToString()));
+                        _Dato.CalificacionesHabilidades.Add("cFl", int.Parse(ds.Tables[0].Rows[0]["cFl"].ToString()));
+                        _Dato.CalificacionesHabilidades.Add("cRf", int.Parse(ds.Tables[0].Rows[0]["cRf"].ToString()));
+                        _Dato.CalificacionesHabilidades.Add("cSc", int.Parse(ds.Tables[0].Rows[0]["cSc"].ToString()));
+                        _Dato.CalificacionesHabilidades.Add("cTf", int.Parse(ds.Tables[0].Rows[0]["cTf"].ToString()));
+                        _Dato.CalificacionesHabilidades.Add("cAg", int.Parse(ds.Tables[0].Rows[0]["cAg"].ToString()));
+                        _Dato.CalificacionesHabilidades.Add("cDl", int.Parse(ds.Tables[0].Rows[0]["cDl"].ToString()));
+                    }
+                    else
+                    {
+                        Ls.Exitoso = false;
+                        Ls.Mensaje = "No existen tests aprobados para realizar el match.";
+                        return Ls;
+                    }
+                }
+                List<OMenores> listMenores = new List<OMenores>();
+                Parametros = new Hashtable();
+                ds = DB.EjecutaProcedimientoAlmacenado("sp_select_lista_menores_disponibles", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        foreach (DataRow row in ds.Tables[0].Rows)
+                        {
+                            OMenores menor = new OMenores();
+                            menor.idMenorAdopcion = int.Parse(row["idMenorAdopcion"].ToString());
+                            menor.CentroAdopcion = row["centroAdopcion"].ToString();
+                            menor.nombres = row["nombres"].ToString();
+                            menor.antecedentes = row["antecedentes"].ToString();
+                            menor.cAl = int.Parse(row["cAl"].ToString());
+                            menor.cAp = int.Parse(row["cAp"].ToString());
+                            menor.cAs = int.Parse(row["cAs"].ToString());
+                            menor.cAt = int.Parse(row["cAt"].ToString());
+                            menor.cRp = int.Parse(row["cRp"].ToString());
+                            menor.cEm = int.Parse(row["cEm"].ToString());
+                            menor.cEe = int.Parse(row["cEe"].ToString());
+                            menor.cIn = int.Parse(row["cIn"].ToString());
+                            menor.cFl = int.Parse(row["cFl"].ToString());
+                            menor.cRf = int.Parse(row["cRf"].ToString());
+                            menor.cTf = int.Parse(row["cTf"].ToString());
+                            menor.cSc = int.Parse(row["cSc"].ToString());
+                            menor.cAg = int.Parse(row["cAg"].ToString());
+                            menor.cDl = int.Parse(row["cDl"].ToString());
+                            listMenores.Add(menor);
+                        }
+                    }
+                }
+                List<OMenores> results = ORecomendacion.Match(_Dato, listMenores);
+                if (results.Count == 0)
+                {
+                    Ls.Exitoso = false;
+                    Ls.Mensaje = "No existen menores compatibles con su perfil.";
+                    return Ls;
+                }
+                foreach(OMenores menor in results)
+                {
+                    Parametros = new Hashtable()
+                    {
+                        {"@idTest", _Dato.IdTest },
+                        {"@idMenorAdopcion", menor.idMenorAdopcion }
+                    };
+                    ds = DB.EjecutaProcedimientoAlmacenado("sp_insert_match", Parametros, cadenaConexionLocal);
+                }
+                Ls.Exitoso = true;
+                Ls.Respuesta = results;
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
 
+        public ORespuesta<string> IniciarTramiteAdopcion (OTramiteAdopcion PmtPeticion)
+        {
+            ORespuesta<string> Ls = new ORespuesta<string>();
+            try
+            {
+                Hashtable Parametros = new Hashtable()
+                {
+                    {"@idUsuario", PmtPeticion.IdUsuario},
+                    {"@idMenorAdopcion", PmtPeticion.IdMenorAdopcion}
+                };
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_insert_tramite_adopcion", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        int res = int.Parse(ds.Tables[0].Rows[0]["result"].ToString());
+                        if (res == 0)
+                        {
+                            Ls.Exitoso = false;
+                            Ls.Mensaje = "No se encuentran tests realizados.";
+                            return Ls;
+                        }
+                        else if (res == 1)
+                        {
+                            Ls.Exitoso = false;
+                            Ls.Mensaje = "El menor solicitado no es compatible con su perfil. Realice una nueva búsqueda para encontrar menores compatibles con su perfil.";
+                            return Ls;
+                        }
+                        else
+                        {
+                            Ls.Exitoso = false;
+                            Ls.Mensaje = "El trámite con este menor ya fué iniciado.";
+                            return Ls;
+                        }
+                    }
+
+                }
+                Ls.Exitoso = true;
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+        public ORespuesta<OTramiteAdopcion> ListaTramitesAdopcionUsuario(OUsuario PmtPeticion)
+        {
+            ORespuesta<OTramiteAdopcion> Ls = new ORespuesta<OTramiteAdopcion>();
+            try
+            {
+                Hashtable Parametros = new Hashtable()
+                {
+                    {"@idUsuario", PmtPeticion.IdUsuario}
+                };
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_lista_tramites_usuario", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables.Count > 0)
+                    {
+                        if (ds.Tables[0].Rows.Count > 0)
+                        {
+                            foreach (DataRow row in ds.Tables[0].Rows)
+                            {
+                                OTramiteAdopcion tr = new OTramiteAdopcion();
+                                tr.IdTramite = int.Parse(row["idTramite"].ToString());
+                                tr.FechaTramite = DateTime.Parse(row["fechaTramite"].ToString());
+                                tr.Estatus = row["estatus"].ToString();
+                                tr.CentroAdopcion = row["centroAdopcion"].ToString();
+                                tr.Menor = row["nombreMenor"].ToString();
+                                Ls.Respuesta.Add(tr);
+                            }
+                        }
+                    }
+                }
+                Ls.Exitoso = true;
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+        public ORespuesta<OMenores> DetalleMenor(OMenores PmtPeticion)
+        {
+            ORespuesta<OMenores> Ls = new ORespuesta<OMenores>();
+            try
+            {
+                Hashtable Parametros = new Hashtable()
+                {
+                    {"@idMenorAdopcion", PmtPeticion.idMenorAdopcion}
+                };
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_datos_menor", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        OMenores _Dato = new OMenores();
+                        _Dato.idMenorAdopcion = int.Parse(ds.Tables[0].Rows[0]["idMenorAdopcion"].ToString());
+                        _Dato.idEstatus = int.Parse(ds.Tables[0].Rows[0]["idEstatus"].ToString());
+                        _Dato.nombres = ds.Tables[0].Rows[0]["nombres"].ToString();
+                        _Dato.apellidos = ds.Tables[0].Rows[0]["apellidos"].ToString();
+                        _Dato.antecedentes = ds.Tables[0].Rows[0]["antecedentes"].ToString();
+                        _Dato.idSexo = int.Parse(ds.Tables[0].Rows[0]["idSexo"].ToString());
+                        _Dato.idCentroAdopcion = int.Parse(ds.Tables[0].Rows[0]["idCentroAdopcion"].ToString());
+                        _Dato.cAl = int.Parse(ds.Tables[0].Rows[0]["cAl"].ToString());
+                        _Dato.cAp = int.Parse(ds.Tables[0].Rows[0]["cAp"].ToString());
+                        _Dato.cAs = int.Parse(ds.Tables[0].Rows[0]["cAs"].ToString());
+                        _Dato.cAt = int.Parse(ds.Tables[0].Rows[0]["cAt"].ToString());
+                        _Dato.cRp = int.Parse(ds.Tables[0].Rows[0]["cRp"].ToString());
+                        _Dato.cEm = int.Parse(ds.Tables[0].Rows[0]["cEm"].ToString());
+                        _Dato.cEe = int.Parse(ds.Tables[0].Rows[0]["cEe"].ToString());
+                        _Dato.cIn = int.Parse(ds.Tables[0].Rows[0]["cIn"].ToString());
+                        _Dato.cFl = int.Parse(ds.Tables[0].Rows[0]["cFl"].ToString());
+                        _Dato.cRf = int.Parse(ds.Tables[0].Rows[0]["cRf"].ToString());
+                        _Dato.cTf = int.Parse(ds.Tables[0].Rows[0]["cTf"].ToString());
+                        _Dato.cSc = int.Parse(ds.Tables[0].Rows[0]["cSc"].ToString());
+                        _Dato.cAg = int.Parse(ds.Tables[0].Rows[0]["cAg"].ToString());
+                        _Dato.cDl = int.Parse(ds.Tables[0].Rows[0]["cDl"].ToString());
+                        _Dato.edad = int.Parse(ds.Tables[0].Rows[0]["edad"].ToString());
+                        _Dato.edadMeses = int.Parse(ds.Tables[0].Rows[0]["edadMeses"].ToString());
+                        Ls.Respuesta.Add(_Dato);
+                        Ls.Exitoso = true;
+                    }
+                }
+                else
+                {
+                    Ls.Exitoso = false;
+                    Ls.Mensaje = "El menor que intenta buscar no existe.";
+                }
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+        public ORespuesta<string> ModificarMenor(OMenores PmtPeticion)
+        {
+            ORespuesta<string> Ls = new ORespuesta<string>();
+            try
+            {
+                Hashtable Parametros = new Hashtable()
+                {
+                    {"@idMenorAdopcion", PmtPeticion.idMenorAdopcion},
+                    {"@idUsuario", PmtPeticion.IdUsuario },
+                    {"@idEstatus", PmtPeticion.idEstatus},
+                    {"@nombres", PmtPeticion.nombres},
+                    {"@apellidos", PmtPeticion.apellidos},
+                    {"@idSexo", PmtPeticion.idSexo},
+                    {"@antecedentes", PmtPeticion.antecedentes},
+                    {"@idCentroAdopcion", PmtPeticion.idCentroAdopcion},
+                    {"@cAl", PmtPeticion.cAl},
+                    {"@cAp", PmtPeticion.cAp},
+                    {"@cAs", PmtPeticion.cAs},
+                    {"@cAt", PmtPeticion.cAt},
+                    {"@cRp", PmtPeticion.cRp},
+                    {"@cEm", PmtPeticion.cEm},
+                    {"@cEe", PmtPeticion.cEe},
+                    {"@cIn", PmtPeticion.cIn},
+                    {"@cFl", PmtPeticion.cFl},
+                    {"@cRf", PmtPeticion.cRf},
+                    {"@cSc", PmtPeticion.cSc},
+                    {"@cTf", PmtPeticion.cTf},
+                    {"@cAg", PmtPeticion.cAg},
+                    {"@cDl", PmtPeticion.cDl},
+                    {"@edad", PmtPeticion.edad},
+                    {"@edadMeses", PmtPeticion.edadMeses}
+                };
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_update_menor_adopcion", Parametros, cadenaConexionLocal);
+                Ls.Exitoso = true;
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+        public ORespuesta<OTramiteAdopcion> ListaTramitesAdopcion()
+        {
+            ORespuesta<OTramiteAdopcion> Ls = new ORespuesta<OTramiteAdopcion>();
+            try
+            {
+                Hashtable Parametros = new Hashtable();
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_lista_tramite", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables.Count > 0)
+                    {
+                        if (ds.Tables[0].Rows.Count > 0)
+                        {
+                            foreach (DataRow row in ds.Tables[0].Rows)
+                            {
+                                OTramiteAdopcion tr = new OTramiteAdopcion();
+                                tr.IdTramite = int.Parse(row["idTramite"].ToString());
+                                tr.FechaTramite = DateTime.Parse(row["fechaTramite"].ToString());
+                                tr.Estatus = row["estatus"].ToString();
+                                tr.CentroAdopcion = row["centroAdopcion"].ToString();
+                                tr.Menor = row["nombreMenor"].ToString();
+                                tr.Solicitante = row["nombreSolicitante"].ToString();
+                                Ls.Respuesta.Add(tr);
+                            }
+                        }
+                    }
+                }
+                Ls.Exitoso = true;
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+        public ORespuesta<string> ModificarEstatusTramite(OTramiteAdopcion PmtPeticion)
+        {
+            ORespuesta<string> Ls = new ORespuesta<string>();
+            try
+            {
+                Hashtable Parametros = new Hashtable()
+                {
+                    {"@idTramite", PmtPeticion.IdTramite},
+                    {"@idEstatusTramite", PmtPeticion.IdEstatus }
+                };
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_update_estatus_tramite", Parametros, cadenaConexionLocal);
+                Ls.Exitoso = true;
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+        public ORespuesta<OUsuario> ListaEvaluaciones()
+        {
+            ORespuesta<OUsuario> Ls = new ORespuesta<OUsuario>();
+            try
+            {
+                Hashtable Parametros = new Hashtable();
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_lista_evaluaciones", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables.Count > 0)
+                    {
+                        if (ds.Tables[0].Rows.Count > 0)
+                        {
+                            foreach (DataRow row in ds.Tables[0].Rows)
+                            {
+                                OUsuario user = new OUsuario();
+                                user.Nombre = row["nombre"].ToString();
+                                user.CURP = row["curp"].ToString();
+                                user.CorreoElectronico = row["email"].ToString();
+                                user.Telefono = row["telefono"].ToString();
+                                user.EstiloCrianza = row["estiloCrianza"].ToString();
+                                user.FechaTest = DateTime.Parse(row["fechaTest"].ToString());
+                                Ls.Respuesta.Add(user);
+                            }
+                        }
+                    }
+                }
+                Ls.Exitoso = true;
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+        public ORespuesta<OUsuario> ListaSolicitantes()
+        {
+            ORespuesta<OUsuario> Ls = new ORespuesta<OUsuario>();
+            try
+            {
+                Hashtable Parametros = new Hashtable();
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_lista_solicitantes", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables.Count > 0)
+                    {
+                        if (ds.Tables[0].Rows.Count > 0)
+                        {
+                            foreach (DataRow row in ds.Tables[0].Rows)
+                            {
+                                OUsuario user = new OUsuario();
+                                user.IdUsuario = int.Parse(row["idUsuario"].ToString());
+                                user.Nombre = row["nombre"].ToString();
+                                user.CURP = row["curp"].ToString();
+                                user.CorreoElectronico = row["email"].ToString();
+                                user.Telefono = row["telefono"].ToString();
+                                user.Estatus = row["estatus"].ToString();
+                                Ls.Respuesta.Add(user);
+                            }
+                        }
+                    }
+                }
+                Ls.Exitoso = true;
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+        public ORespuesta<string> ModificarEstatusSolicitante(OUsuario PmtPeticion)
+        {
+            ORespuesta<string> Ls = new ORespuesta<string>();
+            try
+            {
+                Hashtable Parametros = new Hashtable()
+                {
+                    {"@idUsuario", PmtPeticion.IdUsuario},
+                    {"@idEstatusUsuario", PmtPeticion.IdEstatus }
+                };
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_update_estatus_solicitante", Parametros, cadenaConexionLocal);
+                Ls.Exitoso = true;
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
     }
 }

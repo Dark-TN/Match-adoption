@@ -1,6 +1,4 @@
-﻿const { selectCatalogCentrosLaborales } = require("../../inputmask/global/window");
-
-function ddMMyyyy(ts) {
+﻿function ddMMyyyy(ts) {
     var date = new Date(ts.match(/\d+/)[0] * 1);
     var mm = date.getMonth() + 1; // getMonth() is zero-based
     var dd = date.getDate();

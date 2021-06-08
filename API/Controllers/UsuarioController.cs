@@ -61,6 +61,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [ActionName("ModificarSolicitante")]
+        public IHttpActionResult ModificarSolicitante(OUsuario PmtPeticion)
+        {
+            ORespuesta<OUsuario> res = _D.ModificarSolicitante(PmtPeticion);
+            return Json(res);
+        }
+
+        [HttpPost]
         [ActionName("ListarTest")]
         public IHttpActionResult ListarTest(OUsuario PmtPeticion)
         {
@@ -72,7 +80,7 @@ namespace API.Controllers
         [ActionName("RegistrarMenor")]
         public IHttpActionResult RegistrarMenor(OMenores PmtPeticion)
         {
-            ORespuesta<OMenores> res = _D.RegistrarMenor(PmtPeticion);
+            ORespuesta<string> res = _D.RegistrarMenor(PmtPeticion);
             return Json(res);
         }
         
@@ -81,10 +89,88 @@ namespace API.Controllers
         [ActionName("ObtenerMenores")]
         public IHttpActionResult ObtenerMenores()
         {
-            ORespuesta<ArrayList> res = _D.ObtenerMenores();
+            ORespuesta<OMenores> res = _D.ObtenerMenores();
             return Json(res);
         }
 
+        [HttpPost]
+        [ActionName("Match")]
+        public IHttpActionResult Match(OUsuario PmtPeticion)
+        {
+            ORespuesta<OMenores> res = _D.Match(PmtPeticion);
+            return Json(res);
+        }
 
+        [HttpPost]
+        [ActionName("IniciarTramiteAdopcion")]
+        public IHttpActionResult IniciarTramiteAdopcion(OTramiteAdopcion PmtPeticion)
+        {
+            ORespuesta<string> res = _D.IniciarTramiteAdopcion(PmtPeticion);
+            return Json(res);
+        }
+
+        [HttpPost]
+        [ActionName("ListaTramitesAdopcionUsuario")]
+        public IHttpActionResult ListaTramitesAdopcionUsuario(OUsuario PmtPeticion)
+        {
+            ORespuesta<OTramiteAdopcion> res = _D.ListaTramitesAdopcionUsuario(PmtPeticion);
+            return Json(res);
+        }
+
+        [HttpPost]
+        [ActionName("DetalleMenor")]
+        public IHttpActionResult DetalleMenor(OMenores PmtPeticion)
+        {
+            ORespuesta<OMenores> res = _D.DetalleMenor(PmtPeticion);
+            return Json(res);
+        }
+
+        [HttpPost]
+        [ActionName("ModificarMenor")]
+        public IHttpActionResult ModificarMenor(OMenores PmtPeticion)
+        {
+            ORespuesta<string> res = _D.ModificarMenor(PmtPeticion);
+            return Json(res);
+        }
+
+        [HttpGet]
+        [ActionName("ListaTramitesAdopcion")]
+        public IHttpActionResult ListaTramitesAdopcion()
+        {
+            ORespuesta<OTramiteAdopcion> res = _D.ListaTramitesAdopcion();
+            return Json(res);
+        }
+
+        [HttpPost]
+        [ActionName("ModificarEstatusTramite")]
+        public IHttpActionResult ModificarEstatusTramite(OTramiteAdopcion PmtPeticion)
+        {
+            ORespuesta<string> res = _D.ModificarEstatusTramite(PmtPeticion);
+            return Json(res);
+        }
+
+        [HttpGet]
+        [ActionName("ListaEvaluaciones")]
+        public IHttpActionResult ListaEvaluaciones()
+        {
+            ORespuesta<OUsuario> res = _D.ListaEvaluaciones();
+            return Json(res);
+        }
+
+        [HttpGet]
+        [ActionName("ListaSolicitantes")]
+        public IHttpActionResult ListaSolicitantes()
+        {
+            ORespuesta<OUsuario> res = _D.ListaSolicitantes();
+            return Json(res);
+        }
+
+        [HttpPost]
+        [ActionName("ModificarEstatusSolicitante")]
+        public IHttpActionResult ModificarEstatusSolicitante(OUsuario PmtPeticion)
+        {
+            ORespuesta<string> res = _D.ModificarEstatusSolicitante(PmtPeticion);
+            return Json(res);
+        }
     }
 }

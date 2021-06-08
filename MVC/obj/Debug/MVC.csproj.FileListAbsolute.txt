@@ -974,8 +974,8 @@ C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\MVC\bin\es\System.Web.Razor.res
 C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\MVC\bin\es\System.Web.WebPages.resources.dll
 C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\MVC\bin\es\System.Web.WebPages.Deployment.resources.dll
 C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\MVC\bin\es\System.Web.WebPages.Razor.resources.dll
-C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\MVC\obj\Debug\MVC.csprojAssemblyReference.cache
 C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\MVC\obj\Debug\MVC.csproj.CoreCompileInputs.cache
 C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\MVC\obj\Debug\MVC.csproj.CopyComplete
 C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\MVC\obj\Debug\MVC.dll
 C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\MVC\obj\Debug\MVC.pdb
+C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\MVC\obj\Debug\MVC.csproj.AssemblyReference.cache

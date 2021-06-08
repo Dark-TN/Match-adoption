@@ -70,12 +70,12 @@ function validarTest() {
         if (test[i].value == 0) {
             bootbox.alert
                 ({
-                    message: '<center><label>La pregunta ' + (i + 1).toString() + ' no está respondida.</label></center>'
+                    message: '<center><label>La pregunta ' + test[i].id + ' no está respondida.</label></center>'
                 });
             return;
         }
         var pregunta = new Object();
-        pregunta.IdPregunta = i + 1;
+        pregunta.IdPregunta = test[i].id;
         pregunta.Respuesta = test[i].value;
         pmtPeticion.push(pregunta);
     }
@@ -92,8 +92,6 @@ function validarTest() {
             }
         });
 }
-
-
 
 function setTimeTest() {
     $.ajax
@@ -113,13 +111,14 @@ $(document).ready(function () {
         bFilter: false,
         bLengthChange: false,
         bInfo: false,
+        rowId: 'IdPregunta',
         columns: [
-            { "data": 'IdPregunta', "width" : "3%"},
+            { "data": 'IdPregunta', "width": "3%" },
             { "data": 'Pregunta', "width": "92%" },
             {
                 "data": 'Respuesta',
-                "render": function () {
-                    return '<select class="form-control" name="sctRespuesta">' +
+                "render": function (data, type, row, meta) {
+                    return '<select class="form-control" id = "' + (meta.row + 1) + '" name="sctRespuesta">' +
                         '<option value = "0"> Selecciona una opción</option>' +
                         '<option value = "1">En desacuerdo</option>' +
                         '<option value = "2">Algo en desacuerdo</option>' +

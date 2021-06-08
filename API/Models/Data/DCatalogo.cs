@@ -167,6 +167,41 @@ namespace API.Models.Data
             }
         }
 
-        
+        public ORespuesta<OCatalogo> ListarCatalogoEstatusMenor()
+        {
+            ORespuesta<OCatalogo> Ls = new ORespuesta<OCatalogo>();
+            try
+            {
+                Hashtable Parametros = new Hashtable();
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_lista_cat_estatus_menor", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        foreach (DataRow row in ds.Tables[0].Rows)
+                        {
+                            OCatalogo _Dato = new OCatalogo();
+                            _Dato.Id = int.Parse(row["idEstatusMenorAdopcion"].ToString());
+                            _Dato.Descripcion = row["descripcion"].ToString();
+                            Ls.Respuesta.Add(_Dato);
+                        }
+                    }
+                }
+                Ls.Exitoso = true;
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
     }
 }

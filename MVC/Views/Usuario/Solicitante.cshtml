@@ -9,10 +9,14 @@
 <script type="text/javascript">
     @Html.Raw(ViewBag.Mensaje)
     var urlListarTest = '@Url.Action("ListarTest", "Usuario")';
+    var urlMatch = '@Url.Action("Match", "Usuario")';
+    var urlIniciarTramite = '@Url.Action("IniciarTramiteAdopcion", "Usuario")';
+    var urlListaTramitesUsuario = '@Url.Action("ListaTramitesAdopcionUsuario", "Usuario")';
 </script>
 
 <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-6 cols-stats">
+        <h3><b>Tests realizados</b></h3>
         <table id="tblTests" class="table table-striped table-bordered" style="width: 100%">
             <thead>
                 <tr>
@@ -23,9 +27,44 @@
             <tbody>
             </tbody>
         </table>
+        <h3><b>Trámites</b></h3>
+        <table id="tblTramites" class="table table-striped table-bordered" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Fecha de trámite</th>
+                    <th>Menor</th>
+                    <th>Centro de adopción</th>
+                    <th>Estatus</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <h6>*En caso de que tu solicitud sea aprobada, deberás acudir al centro de adopción correspondiente con tu documentación.</h6>
     </div>
-    <div class="col-sm-6">
-        <canvas id="myChart" width="400" height="400"></canvas>
+    <div class="col-sm-6 cols-stats">
+        <h3><b>Estadísticas</b></h3>
+        <div id="grafica" class="center">
+            <canvas id="myChart"></canvas>
+        </div>
+        <h6>*Los datos mostrados corresponden al promedio obtenido en cada una de las habilidades parentales evaluadas.</h6>
     </div>
 </div>
-
+<div class="row gray-row">
+    <div class="col-sm-12 cols-stats">
+        <h3><b>Match</b></h3>
+        <table id="tblMatch" class="table table-striped table-bordered" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Centro de adopción</th>
+                    <th>Antecedentes</th>
+                    <th>Porcentaje de similitud</th>
+                    <th>Iniciar trámite</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>

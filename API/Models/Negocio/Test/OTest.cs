@@ -106,7 +106,6 @@ namespace API.Models.Negocio.Test
             {
                 this.IdEstiloCrianza = 4;
             }
-            Debug.WriteLine("#######" + this.IdEstiloCrianza.ToString());
         }
     }
 }
