@@ -200,7 +200,7 @@ function editarDatosUsuario() {
                     bootbox.alert("Se modificó la información correctamente.");
                     $("#userName").text(data.Respuesta[0].Nombre);
                 }
-                
+                llenarDatos();
             }
         });
 }

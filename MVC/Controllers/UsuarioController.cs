@@ -341,7 +341,8 @@ namespace MVC.Controllers
                 int.Parse(formCollection["sctEstadoCivil"]) == 0 || string.IsNullOrEmpty(formCollection["txtCorreoRegistroUsuario"]) ||
                 int.Parse(formCollection["sctNivelEstudios"]) == 0 || string.IsNullOrEmpty(formCollection["txtOcupacion"]) ||
                 string.IsNullOrEmpty(formCollection["txtDireccion"]) || string.IsNullOrEmpty(formCollection["txtTelefonoUsuario"]) ||
-                string.IsNullOrEmpty(formCollection["txtPasswordRegistroUsuario"]) || string.IsNullOrEmpty(formCollection["txtConfirmarPasswordRegistroUsuario"]))
+                string.IsNullOrEmpty(formCollection["txtPasswordRegistroUsuario"]) || string.IsNullOrEmpty(formCollection["txtConfirmarPasswordRegistroUsuario"]) ||
+                !formCollection["chkAviso"].Contains("true"))
             {
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Asegurate de llenar todos los campos correctamente.</center></label>');");
                 return RedirectToAction("Index", "Principal");
@@ -455,8 +456,7 @@ namespace MVC.Controllers
                 DateTime.Parse(formCollection["dtFechaIngreso"]) == DateTime.MinValue || int.Parse(formCollection["sctCentroLabores"]) == 0 ||
                 string.IsNullOrEmpty(formCollection["txtTelefonoEmpleado"]) || string.IsNullOrEmpty(formCollection["txtCorreoRegistroEmpleado"]) ||
                 string.IsNullOrEmpty(formCollection["txtPasswordRegistroEmpleado"]) || string.IsNullOrEmpty(formCollection["txtConfirmarPasswordRegistroEmpleado"]) ||
-                int.Parse(formCollection["sctSexoUsuario2"]) == 0
-                )
+                int.Parse(formCollection["sctSexoUsuario2"]) == 0 || !formCollection["chkAviso"].Contains("true"))
             {
                 TempData["Mensaje"] = string.Format("bootbox.alert('<center><label>Asegurate de llenar todos los campos correctamente.</center></label>');");
                 return RedirectToAction("Index", "Principal");
@@ -1186,6 +1186,62 @@ namespace MVC.Controllers
             {
                 PmtPeticion.IdUsuario = ((OUsuario)Session["Usuario"]).IdUsuario;
                 var url = $"https://localhost:44335/api/Usuario/ModificarSolicitante";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                string json = JsonConvert.SerializeObject(PmtPeticion);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                {
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+                        if (strReader == null)
+                        {
+                            res.Mensaje = "El servidor no responde.";
+                            res.Exitoso = false;
+                            return Json(res);
+                        }
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+                            string responseBody = objReader.ReadToEnd();
+                            ORespuesta<OUsuario> respApi = JsonConvert.DeserializeObject<ORespuesta<OUsuario>>(responseBody);
+                            if (respApi.Exitoso)
+                            {
+                                Session["Usuario"] = respApi.Respuesta[0];
+                            }
+                            return Json(respApi);
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                res.Mensaje = ex.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+            catch (Exception e)
+            {
+                res.Mensaje = e.Message;
+                res.Exitoso = false;
+                return Json(res);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ModificarEmpleado(OUsuario PmtPeticion)
+        {
+            ORespuesta<string> res = new ORespuesta<string>();
+            try
+            {
+                PmtPeticion.IdUsuario = ((OUsuario)Session["Usuario"]).IdUsuario;
+                var url = $"https://localhost:44335/api/Usuario/ModificarEmpleado";
                 var request = (HttpWebRequest)WebRequest.Create(url);
                 string json = JsonConvert.SerializeObject(PmtPeticion);
                 request.Method = "POST";

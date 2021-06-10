@@ -69,6 +69,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [ActionName("ModificarEmpleado")]
+        public IHttpActionResult ModificarEmpleado(OUsuario PmtPeticion)
+        {
+            ORespuesta<OUsuario> res = _D.ModificarEmpleado(PmtPeticion);
+            return Json(res);
+        }
+
+        [HttpPost]
         [ActionName("ListarTest")]
         public IHttpActionResult ListarTest(OUsuario PmtPeticion)
         {

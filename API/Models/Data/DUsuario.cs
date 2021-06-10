@@ -23,6 +23,7 @@ namespace API.Models.Data
     public class DUsuario
     {
         private readonly string cadenaConexionLocal;
+
         public DUsuario()
         {
             cadenaConexionLocal = ConfigurationManager.ConnectionStrings["DB"].ConnectionString;
@@ -455,6 +456,86 @@ namespace API.Models.Data
             }
         }
 
+        public ORespuesta<OUsuario> ModificarEmpleado(OUsuario PmtPeticion)
+        {
+            ORespuesta<OUsuario> Ls = new ORespuesta<OUsuario>();
+            try
+            {
+               if( string.IsNullOrEmpty(PmtPeticion.Telefono) ||
+                string.IsNullOrEmpty(PmtPeticion.Password))
+                {
+                    Ls.Exitoso = false;
+                    Ls.Mensaje = "Asegurate de llenar todos los datos correctamente";
+                    return Ls;
+                }
+                if (!string.IsNullOrEmpty(PmtPeticion.NuevaPassword) && !PmtPeticion.NuevaPassword.Equals(PmtPeticion.ConfirmarPassword))
+                {
+                    Ls.Exitoso = false;
+                    Ls.Mensaje = "Las contraseñas no coinciden";
+                    return Ls;
+                }
+                Hashtable Parametros = new Hashtable()
+                {
+                    {"@idUsuario", PmtPeticion.IdUsuario}
+                };
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_user_password", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        OUsuario user = new OUsuario();
+                        user.PasswordEncriptada = ds.Tables[0].Rows[0]["password"].ToString();
+                        user.PasswordPrivada = ds.Tables[0].Rows[0]["passwordPrivada"].ToString();
+                        if (PmtPeticion.Password.Equals(OEncriptadoSimetrico.Decrypt<RijndaelManaged>(user.PasswordEncriptada, user.PasswordPrivada)))
+                        {
+                            Parametros = new Hashtable()
+                            {
+                                { "@idUsuario", PmtPeticion.IdUsuario },
+                                { "@usuario", PmtPeticion.CorreoElectronico },
+                                { "@email", PmtPeticion.CorreoElectronico },
+                                { "@telefono", PmtPeticion.Telefono }
+                            };
+                            ds = DB.EjecutaProcedimientoAlmacenado("sp_update_empleado", Parametros, cadenaConexionLocal);
+                            if (!string.IsNullOrEmpty(PmtPeticion.NuevaPassword))
+                            {
+                                PmtPeticion.GenerarPasswordPrivada();
+                                PmtPeticion.PasswordEncriptada = OEncriptadoSimetrico.Encrypt<RijndaelManaged>(PmtPeticion.NuevaPassword, PmtPeticion.PasswordPrivada);
+                                Parametros = new Hashtable()
+                                {
+                                    { "@idUsuario", PmtPeticion.IdUsuario },
+                                    { "@password", PmtPeticion.PasswordEncriptada },
+                                    { "@passwordPrivada", PmtPeticion.PasswordPrivada }
+                                };
+                                ds = DB.EjecutaProcedimientoAlmacenado("sp_update_password", Parametros, cadenaConexionLocal);
+                            }
+                            PmtPeticion.Password = string.Empty;
+                            PmtPeticion.NuevaPassword = string.Empty;
+                            PmtPeticion.PasswordEncriptada = string.Empty;
+                            Ls.Exitoso = true;
+                            Ls.Respuesta.Add(PmtPeticion);
+                        }
+                        else
+                        {
+                            Ls.Exitoso = false;
+                            Ls.Mensaje = "La contraseña es incorrecta.";
+                        }
+                    }
+                }
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
 
         public ORespuesta<OUsuario> RegistroEmpleado(OUsuario PmtPeticion)
         {
@@ -787,6 +868,7 @@ namespace API.Models.Data
                             menor.CentroAdopcion = row["centroAdopcion"].ToString();
                             menor.nombres = row["nombres"].ToString();
                             menor.antecedentes = row["antecedentes"].ToString();
+                            menor.EdadTexto = row["edadTexto"].ToString();
                             menor.cAl = int.Parse(row["cAl"].ToString());
                             menor.cAp = int.Parse(row["cAp"].ToString());
                             menor.cAs = int.Parse(row["cAs"].ToString());

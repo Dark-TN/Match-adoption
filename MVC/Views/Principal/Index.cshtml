@@ -70,7 +70,12 @@
                     </div>
                     <div class="row row-form">
                         <div class="col-sm-12 text-center">
-                            <label>¿No tienes cuenta? <a data-dismiss="modal" data-toggle ="modal" href="#modal-register">Reg&iacute;strate</a>.</label>
+                            <label><a href="@Url.Action("RecuperarPassword","Principal")">Olvidé mi contraseña</a>.</label>
+                        </div>
+                    </div>
+                    <div class="row row-form">
+                        <div class="col-sm-12 text-center">
+                            <label>¿No tienes cuenta? <a data-dismiss="modal" data-toggle="modal" href="#modal-register">Reg&iacute;strate</a>.</label>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -164,6 +169,11 @@
                             <div class="col-sm-12 reCaptchaContainer">
                                 <div class="g-recaptcha" data-sitekey="6LftBosaAAAAAO6f9mxfmfcbPFIlVfl57uC23dJZ"></div>
                             </div>
+                            <div class="col-sm-12">
+                                <input class="form-check-input" type="checkbox" name="chkAviso" id="chkAviso">
+                                <label>He leído y estoy de acuerdo con el <a data-toggle="modal" href="#modal-privacy">Aviso de privaciad de datos.</a></label>
+                                
+                            </div>
                         </div>
                             <div class="row row-form">
                                 <div class="col-sm-12 text-center">
@@ -225,6 +235,11 @@
                             <div class="col-sm-12 reCaptchaContainer">
                                 <div class="g-recaptcha" data-sitekey="6LftBosaAAAAAO6f9mxfmfcbPFIlVfl57uC23dJZ"></div>
                             </div>
+                            <div class="col-sm-12">
+                                <input class="form-check-input" type="checkbox" name="chkAviso" id="chkAviso">
+                                <label>He leído y estoy de acuerdo con el <a data-toggle="modal" href="#modal-privacy">Aviso de privaciad de datos.</a></label>
+
+                            </div>
                         </div>
                             <div class="row row-form">
                                 <div class="col-sm-12 text-center">
@@ -268,6 +283,99 @@
                 <b>Nuestros valores:</b>
                 <br />
                 Somos una institución que se rige siempre apoyada a la Ley, con honestidad, transparencia, solidaridad, prudencia, responsabilidad, sensibilidad, y respeto hacia todos los involucrados en los procesos administrativos, logísticos y legales
+            </div>
+            <div class="modal-footer">
+                <div class="col-sm-12 text-right">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">De acuerdo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-privacy" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Aviso de privacidad de datos</h4>
+            </div>
+            <div class="modal-body">
+                <b>AVISO DE PRIVACIDAD DE DATOS</b>
+                <br />
+                <br />
+                Match Adoption comprometido con la protección de sus datos personales asumiendo la responsabilidad de su uso, manejo, almacenamiento y confidencialidad de acuerdo a lo establecido en la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (en adelante LFPDPPP) y con el fin de darle a conocer la información relativa a las características principales del tratamiento al que serán sometidos sus datos personales, emite el presente Aviso de Privacidad.
+                <br />
+                <br />
+                <b>¿Para qué fines recabamos y utilizamos sus datos personales?</b>
+                <br />
+                Match Adoption, da tratamiento a sus datos personales para:
+                <br />
+                <ul>
+                    <li type="circle">verificar, confirmar y validar su identidad.</li>
+                    <li type="circle">administrar, operar y dar seguimiento a las solicitudes de adopción.</li>
+                    <li type="circle">realizar estadísticas y mejoras en el proceso de adopción.</li>
+                </ul>
+                <br />
+                De manera adicional, Match Adoption utilizará sus datos personales para fines adicionales requeridos por la Procuraduría Federal de Protección de Niñas, Niños y Adolescentes.
+                <br />
+                <br />
+                <b>¿Qué datos personales utilizaremos para estos fines y de dónde los obtendremos?</b>
+                <br />
+                Para las finalidades señaladas en el presente Aviso de Privacidad, podemos recabar sus datos personales de distintas formas: cuando usted nos lo proporciona
+                directamente o cuando obtenemos información a través de otras fuentes que están permitidas por la Ley.
+                <br />
+                Match Adoption recopila la siguiente información:
+                <br />
+                <ul>
+                    <li type="circle">CURP.</li>
+                    <li type="circle">Nombre completo.</li>
+                    <li type="circle">Fecha de nacimiento.</li>
+                    <li type="circle">Edad.</li>
+                    <li type="circle">Sexo.</li>
+                    <li type="circle">Grado Escolar.</li>
+                    <li type="circle">Estado civil.</li>
+                    <li type="circle">Ocupación.</li>
+                    <li type="circle">Dirección.</li>
+                    <li type="circle">Teléfono.</li>
+                    <li type="circle">Correo electrónico.</li>
+                </ul>
+                <br />
+                Además de los datos personales mencionados anteriormente, realizamos el manejo de datos personales considerados como sensibles y que requieren de especial atención.
+                <br />
+                Match Adoption como responsable del tratamiento de su información ha establecido medidas y controles administrativos y electrónicos necesarios para cumplir con las disposiciones normativas aplicables. Hemos tomado las medidas necesarias a fin de salvaguardar en todo momento sus datos personales, procurando su buen uso y confidencialidad de los mismos.
+                <br />
+                <br />
+                <b>Uso de cookies y otras tecnologías</b>
+                <br />
+                Le informamos que Match Adoption utiliza en su sitio de internet cookies, a través de estos mecanismos se recaban datos de manera automática y simultánea para monitorear su comportamiento como usuario de los servicios de internet.
+                <br />
+                Así mismo, le informamos que usted puede deshabilitar el uso de estos mecanismos siguiendo el procedimiento para desactivación, establecido para su navegador de internet.
+                <br />
+                <br />
+                <b>¿Cómo puede acceder, rectificar o cancelar sus datos personales, u oponerse a su uso?</b>
+                <br />
+                La protección de datos personales es un derecho humano que le da a los individuos el poder de controlar la información que comparten con terceros, así como el derecho
+                a que ésta se utilice de forma adecuada, para permitir el ejercicio de otros derechos y evitar daños a su Titular.
+                <br />
+                La Constitución Política de los Estados Unidos Mexicanos, en su artículo 16, en el párrafo II, reconoce el derecho a la protección de sus datos personales como una
+                garantía individual, al señalar que “...Toda persona tiene derecho a la protección de sus datos personales, al acceso, rectificación y cancelación de los mismos, así como
+                a manifestar su oposición en los terminos que fije la Ley, la cual establecerá los supuestos de excepción a los principios que rijan el tratamiento de datos, por razones de
+                seguridad nacional, disposiciones de orden público, seguridad y salud públicas o para proteger los derechos de terceros...”
+                <br />
+                En todo momento usted podrá limitar el uso o divulgación de sus datos personales mediante el ejercicio de los derechos ARCO (Acceso, Rectificación, Cancelación y
+                Oposición) que la Ley prevé mediante la presentación de su solicitud por escrito en nuestra oficina de Corporativo en Ignacio Zaragoza No.24, San Lucas Tepetlacalco, Tlalnepantla de Baz, Estado de México cp.54055, o al
+                correo electrónico transparenciaMAdoption@match.adoption.mx
+                <br />
+                <br />
+                <b>Cambios en el aviso de privacidad</b>
+                <br />
+                Los cambios o actualizaciones al aviso de privacidad de Match Adoption notificarán por los siguientes medios:
+                <br />
+                <ul>
+                    <li type="circle">Correo electrónico.</li>
+                    <li type="circle">Sitio web de Match Adoption.</li>
+                </ul>
             </div>
             <div class="modal-footer">
                 <div class="col-sm-12 text-right">

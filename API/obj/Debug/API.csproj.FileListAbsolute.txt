@@ -283,3 +283,7 @@ C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\API\obj\Debug\API.csproj.CopyCo
 C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\API\obj\Debug\API.dll
 C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\API\obj\Debug\API.pdb
 C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\API\obj\Debug\API.csproj.AssemblyReference.cache
+C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\API\bin\FluentEmail.Core.dll
+C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\API\bin\FluentEmail.Smtp.dll
+C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\API\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\jedua\Documents\ESCOM\TT\Match-adoption\API\bin\Microsoft.Extensions.DependencyInjection.Abstractions.xml

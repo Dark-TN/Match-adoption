@@ -20,7 +20,8 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>
+    </IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -403,6 +404,9 @@
     <Content Include="Views\Usuario\Empleado.cshtml" />
     <Content Include="Views\Shared\_MenuEmpleado.cshtml" />
     <Content Include="Views\Shared\_MasterEmpleado.cshtml" />
+    <Content Include="Views\Shared\_MenuRecuperarPassword.cshtml" />
+    <Content Include="Views\Principal\RecuperarPassword.cshtml" />
+    <Content Include="Views\Shared\_MasterRecuperarPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

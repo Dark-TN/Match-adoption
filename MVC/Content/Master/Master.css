@@ -12,6 +12,13 @@
     border-top-style: solid;
 }
 
+.panel-hold {
+    margin: auto;
+    width: 45%;
+    border: 5px;
+    padding: 50px;
+}
+
 .center {
     margin: auto;
     width: 60%;

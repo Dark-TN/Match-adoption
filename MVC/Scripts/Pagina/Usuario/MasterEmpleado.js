@@ -49,12 +49,8 @@ function llenarDatos() {
     $.ajax
         ({
             type: 'POST',
-            url: urlDatosSolicitante,
+            url: urlDatosEmpleado,
             success: function (data) {
-                $("#txtModalCURPUsuario").val(data.CURP);
-                $("#txtModalNombreUsuario").val(data.Nombre);
-                $("#dtFechaIngreso").val(ddMMyyyy(data.Fecha));
-                $("#sctSexoUsuario2").prop('selectedIndex', data.IdSexo);
                 $("#txtTelefonoEmpleado").val(data.Telefono);
                 $("#txtCorreoRegistroEmpleado").val(data.CorreoElectronico);
             }
@@ -63,40 +59,6 @@ function llenarDatos() {
 
 function editarDatosUsuario() {
     var pmtPeticion = new Object();
-    if ($("#txtModalCURPUsuario").val() == "") {
-        bootbox.alert
-            ({
-                message: '<center><label>Aseg&uacute;rate de llenar todos los campos correctamente.</label></center>'
-            });
-        return;
-    }
-    if ($("#txtModalNombreUsuario").val() == "") {
-        bootbox.alert
-            ({
-                message: '<center><label>Aseg&uacute;rate de llenar todos los campos correctamente.</label></center>'
-            });
-        return;
-    }
-    if ($("#dtFechaIngreso").val() == "") {
-        bootbox.alert
-            ({
-                message: '<center><label>Aseg&uacute;rate de llenar todos los campos correctamente.</label></center>'
-            });
-        return;
-    }
-    if ($("#sctSexoUsuario2 option:selected").val() == "0") {
-        bootbox.alert
-            ({
-                message: '<center><label>Aseg&uacute;rate de llenar todos los campos correctamente.</label></center>'
-            });
-        return;
-    } if ($("#sctCentroLabores option:selected").val() == "0") {
-        bootbox.alert
-            ({
-                message: '<center><label>Aseg&uacute;rate de llenar todos los campos correctamente.</label></center>'
-            });
-        return;
-    }
     if ($("#txtTelefonoEmpleado").val() == "") {
         bootbox.alert
             ({
@@ -125,12 +87,6 @@ function editarDatosUsuario() {
             });
         return;
     }
-
-   
-    pmtPeticion.CURP = $("#txtModalCURPUsuario").val();
-    pmtPeticion.Nombre = $("#txtModalNombreUsuario").val();
-    pmtPeticion.FechaNacimiento = $("#dtFechaIngreso").val();
-    pmtPeticion.IdSexo = $("#sctSexoUsuario2 option:selected").val();
     pmtPeticion.Telefono = $("#txtTelefonoEmpleado").val();
     pmtPeticion.CorreoElectronico = $("#txtCorreoRegistroEmpleado").val(); 
     pmtPeticion.Password = $("#txtModalPassword").val();
@@ -140,13 +96,20 @@ function editarDatosUsuario() {
         ({
             type: 'POST',
             data: pmtPeticion,
-            url: urlModificarDatosSolicitante,
+            url: urlModificarEmpleado,
             beforeSend: function () {
                 MensajeCargando();
             },
             success: function (data) {
                 bootbox.hideAll();
-                alert(data.Nombre);
+                $("#myModal").modal('hide');
+                if (data.Exitoso === false) {
+                    bootbox.alert(data.Mensaje);
+                }
+                else {
+                    bootbox.alert("Se modificó la información correctamente.");
+                }
+                llenarDatos();
             }
         });
 }
@@ -154,6 +117,7 @@ function editarDatosUsuario() {
 $(document).ready(function () {
     selectCatalogoSexo();
     selectCatalogCentrosLaborales();
+    llenarDatos();
     $("#btnModificarInformacion").click(function () {
         editarDatosUsuario();
     });

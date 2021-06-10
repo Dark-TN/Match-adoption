@@ -25,6 +25,7 @@ function Match() {
                     for (i = 0; i < data.Respuesta.length; i++) {
                         tblMatch.row.add({
                             "nombres": data.Respuesta[i].nombres,
+                            "EdadTexto": data.Respuesta[i].EdadTexto,
                             "CentroAdopcion": data.Respuesta[i].CentroAdopcion,
                             "antecedentes": data.Respuesta[i].antecedentes,
                             "Porcentaje": data.Respuesta[i].Porcentaje.toString() + '%',
@@ -106,6 +107,16 @@ function ListaTest() {
                                 line: {
                                     borderWidth: 3
                                 }
+                            },
+                            scale: {
+                                r: {
+                                    beginAtZero: false,
+                                    max: 4,
+                                    min: 1,
+                                    ticks: {
+                                        stepSize: 1
+                                    }
+                                }
                             }
                         },
                     });
@@ -134,6 +145,7 @@ $(document).ready(function () {
         bInfo: true,
         columns: [
             { "data": 'nombres' },
+            { "data": 'EdadTexto' },
             { "data": 'CentroAdopcion' },
             { "data": 'antecedentes' },
             { "data": 'Porcentaje' },
