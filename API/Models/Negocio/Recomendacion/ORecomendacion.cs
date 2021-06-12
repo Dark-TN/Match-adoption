@@ -57,7 +57,10 @@ namespace API.Models.Negocio.Recomendacion
                     pows += (float)Math.Pow(userScores[i] - ls[i], 2);
                 }
                 menor.Porcentaje = (float)Math.Round(100 - (float)Math.Sqrt(pows) * 100 / maxLen, 2);
-                results.Add(menor);
+                if(menor.Porcentaje >= 50.0)
+                {
+                    results.Add(menor);
+                }
             }
             return results;
         }

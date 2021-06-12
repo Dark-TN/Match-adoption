@@ -20,8 +20,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort>
-    </IISExpressSSLPort>
+    <IISExpressSSLPort>44310</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -364,6 +363,7 @@
     <Content Include="Scripts\Pagina\Chat\Chat.js" />
     <Content Include="Scripts\Pagina\Login\Login.js" />
     <Content Include="Scripts\Pagina\Principal\Principal.js" />
+    <Content Include="Scripts\Pagina\Principal\RecuperarPassword.js" />
     <Content Include="Scripts\Pagina\Registro\Registro.js" />
     <Content Include="Scripts\Pagina\Usuario\Administrador.js" />
     <Content Include="Scripts\Pagina\Usuario\AdminMenores.js" />
@@ -407,6 +407,7 @@
     <Content Include="Views\Shared\_MenuRecuperarPassword.cshtml" />
     <Content Include="Views\Principal\RecuperarPassword.cshtml" />
     <Content Include="Views\Shared\_MasterRecuperarPassword.cshtml" />
+    <Content Include="Views\Usuario\CambiarPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -446,7 +447,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>26157</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:26157/</IISUrl>
+          <IISUrl>https://localhost:44310/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -18,12 +18,6 @@ namespace MVC
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Principal", action = "Index", id = UrlParameter.Optional }
             );
-            routes.MapRoute(
-                name: "Login",
-                url : "{Login}/{Index}/{id}",
-                defaults: new {controller = "Principal", action = "Index", id = UrlParameter.Optional}
-                
-                );
         }
     }
 }

@@ -17,16 +17,20 @@ using System.Web;
 using System.Web.Helpers;
 using Microsoft.Ajax.Utilities;
 using API.Models.Negocio.Recomendacion;
+using API.Models.Negocio.Utilidades;
+using API.Models.Negocio.Seguridad;
 
 namespace API.Models.Data
 {
     public class DUsuario
     {
         private readonly string cadenaConexionLocal;
+        private readonly OEmail Email;
 
         public DUsuario()
         {
             cadenaConexionLocal = ConfigurationManager.ConnectionStrings["DB"].ConnectionString;
+            Email = new OEmail("nr.mail.sender@gmail.com", "prueba2021-", "smtp.gmail.com", 587);
         }
 
         public ORespuesta<OUsuario> Login(OUsuario PmtPeticion)
@@ -174,6 +178,23 @@ namespace API.Models.Data
                             user.Direccion = PmtPeticion.Direccion;
                             user.Telefono = PmtPeticion.Telefono;
                             user.CorreoElectronico = PmtPeticion.CorreoElectronico;
+                            Parametros = new Hashtable();
+                            ds = DB.EjecutaProcedimientoAlmacenado("sp_select_lista_correos_empleados", Parametros, cadenaConexionLocal);
+                            List<string> emails = new List<string>();
+                            if (ds.Tables.Count > 0)
+                            {
+                                if (ds.Tables[0].Rows.Count > 0)
+                                {
+                                    foreach (DataRow row in ds.Tables[0].Rows)
+                                    {
+                                        emails.Add(row["email"].ToString());
+                                    }
+                                }
+                            }
+                            foreach(string email in emails)
+                            {
+                                bool mail = Email.EnviarCorreo(email, "Registro de solicitante", "El solicitante " + user.Nombre + " se registró en Match-Adoption.<br/>Valídalo para que pueda acceder a su cuenta.");
+                            }
                             Ls.Exitoso = true;
                             Ls.Respuesta.Add(user);
                         }
@@ -430,6 +451,7 @@ namespace API.Models.Data
                             PmtPeticion.Password = string.Empty;
                             PmtPeticion.NuevaPassword = string.Empty;
                             PmtPeticion.PasswordEncriptada = string.Empty;
+                            bool mail = Email.EnviarCorreo(PmtPeticion.CorreoElectronico, "Cambio de información en su cuenta", "Se modificó la información de su cuenta correctamente.");
                             Ls.Exitoso = true;
                             Ls.Respuesta.Add(PmtPeticion);
                         }
@@ -511,6 +533,7 @@ namespace API.Models.Data
                             PmtPeticion.Password = string.Empty;
                             PmtPeticion.NuevaPassword = string.Empty;
                             PmtPeticion.PasswordEncriptada = string.Empty;
+                            bool mail = Email.EnviarCorreo(PmtPeticion.CorreoElectronico, "Cambio de información en su cuenta", "Se modificó la información de su cuenta correctamente.");
                             Ls.Exitoso = true;
                             Ls.Respuesta.Add(PmtPeticion);
                         }
@@ -958,6 +981,23 @@ namespace API.Models.Data
                     }
 
                 }
+                Parametros = new Hashtable();
+                ds = DB.EjecutaProcedimientoAlmacenado("sp_select_lista_correos_empleados", Parametros, cadenaConexionLocal);
+                List<string> emails = new List<string>();
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        foreach (DataRow row in ds.Tables[0].Rows)
+                        {
+                            emails.Add(row["email"].ToString());
+                        }
+                    }
+                }
+                foreach (string email in emails)
+                {
+                    bool mail = Email.EnviarCorreo(email, "Registro de solicitante", "¡Hay un nuevo trámite!.<br/>Valídalo para poder darle seguimiento.");
+                }
                 Ls.Exitoso = true;
                 return Ls;
             }
@@ -1305,6 +1345,138 @@ namespace API.Models.Data
                     {"@idEstatusUsuario", PmtPeticion.IdEstatus }
                 };
                 DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_update_estatus_solicitante", Parametros, cadenaConexionLocal);
+                Ls.Exitoso = true;
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+        public ORespuesta<string> RecuperarPassword(OUsuario PmtPeticion)
+        {
+            ORespuesta<string> Ls = new ORespuesta<string>();
+            try
+            {
+                string token = OToken.GenerarToken(10);
+                Hashtable Parametros = new Hashtable()
+                {
+                    {"@email", PmtPeticion.CorreoElectronico},
+                    {"@token", token }
+                };
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_insert_token_recuperar_password", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        int result = int.Parse(ds.Tables[0].Rows[0]["result"].ToString());
+                        if(result == 0)
+                        {
+                            Ls.Exitoso = false;
+                            Ls.Mensaje = "La dirección de correo electrónico ingresada no está asociada a ninguna cuenta.";
+                            return Ls;
+                        }
+                    }
+                }
+                bool mail = Email.EnviarCorreo(PmtPeticion.CorreoElectronico, "Recuperación de contraseña", "Para recuperar su contraseña, haga click en el siguiente <a href=\"https://localhost:44310/Usuario/CambiarPassword?token=" + token + "\">enlace</a>");
+                Ls.Exitoso = true;
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+        public ORespuesta<OUsuario> CambiarPassword(string token)
+        {
+            ORespuesta<OUsuario> Ls = new ORespuesta<OUsuario>();
+            try
+            {
+                Hashtable Parametros = new Hashtable()
+                {
+                    {"@token", token }
+                };
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_select_usuario_token_recuperar_password", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        int result = int.Parse(ds.Tables[0].Rows[0]["idUsuario"].ToString());
+                        string email = ds.Tables[0].Rows[0]["email"].ToString();
+                        if (result == 0)
+                        {
+                            Ls.Exitoso = false;
+                            Ls.Mensaje = "El token es inválido.";
+                            return Ls;
+                        }
+                        OUsuario user = new OUsuario();
+                        user.IdUsuario = result;
+                        user.CorreoElectronico = email;
+                        Ls.Respuesta.Add(user);
+                    }
+                }
+                Ls.Exitoso = true;
+                return Ls;
+            }
+            catch (SqlException e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+            catch (Exception e)
+            {
+                Ls.Mensaje = e.Message;
+                Ls.Exitoso = false;
+                return Ls;
+            }
+        }
+
+        public ORespuesta<string> RestablecerPassword(OUsuario PmtPeticion)
+        {
+            ORespuesta<string> Ls = new ORespuesta<string>();
+            try
+            {
+                if (string.IsNullOrEmpty(PmtPeticion.Password) || string.IsNullOrEmpty(PmtPeticion.ConfirmarPassword))
+                {
+                    Ls.Exitoso = false;
+                    Ls.Mensaje = "Asegurate de llenar todos los datos correctamente";
+                    return Ls;
+                }
+                if (!PmtPeticion.Password.Equals(PmtPeticion.ConfirmarPassword))
+                {
+                    Ls.Exitoso = false;
+                    Ls.Mensaje = "Las contraseñas no coinciden";
+                    return Ls;
+                }
+                PmtPeticion.GenerarPasswordPrivada();
+                PmtPeticion.PasswordEncriptada = OEncriptadoSimetrico.Encrypt<RijndaelManaged>(PmtPeticion.Password, PmtPeticion.PasswordPrivada);
+                Hashtable Parametros = new Hashtable()
+                {
+                    { "@idUsuario", PmtPeticion.IdUsuario },
+                    { "@password", PmtPeticion.PasswordEncriptada },
+                    { "@passwordPrivada", PmtPeticion.PasswordPrivada }
+                };
+                DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_update_password", Parametros, cadenaConexionLocal);
+                bool mail = Email.EnviarCorreo(PmtPeticion.CorreoElectronico, "Restablecimiento de contraseña", "Se restableció la contraseña de su cuenta correctamente.");
                 Ls.Exitoso = true;
                 return Ls;
             }

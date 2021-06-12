@@ -45,12 +45,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentEmail.Core, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentEmail.Core.3.0.0\lib\netstandard2.0\FluentEmail.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentEmail.Smtp, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentEmail.Smtp.3.0.0\lib\netstandard2.0\FluentEmail.Smtp.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=3.1.11.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.3.1.11\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
@@ -178,10 +172,12 @@
     <Compile Include="Models\Negocio\Catalogo\OCatalogo.cs" />
     <Compile Include="Models\Negocio\Recomendacion\ORecomendacion.cs" />
     <Compile Include="Models\Negocio\Seguridad\EncriptadoSimetrico\OEncriptadoSimetrico.cs" />
+    <Compile Include="Models\Negocio\Seguridad\OToken.cs" />
     <Compile Include="Models\Negocio\Test\OPregunta.cs" />
     <Compile Include="Models\Negocio\Test\OTest.cs" />
     <Compile Include="Models\Negocio\Usuario\OTramiteAdopcion.cs" />
     <Compile Include="Models\Negocio\Usuario\OUsuario.cs" />
+    <Compile Include="Models\Negocio\Utilidades\OEmail.cs" />
     <Compile Include="Models\Peticion\ORespuesta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -180,5 +180,29 @@ namespace API.Controllers
             ORespuesta<string> res = _D.ModificarEstatusSolicitante(PmtPeticion);
             return Json(res);
         }
+
+        [HttpPost]
+        [ActionName("RecuperarPassword")]
+        public IHttpActionResult RecuperarPassword(OUsuario PmtPeticion)
+        {
+            ORespuesta<string> res = _D.RecuperarPassword(PmtPeticion);
+            return Json(res);
+        }
+
+        [HttpGet]
+        [ActionName("CambiarPassword")]
+        public IHttpActionResult CambiarPassword(string token)
+        {
+            ORespuesta<OUsuario> res = _D.CambiarPassword(token);
+            return Json(res);
+        }
+
+        [HttpPost]
+        [ActionName("RestablecerPassword")]
+        public IHttpActionResult RestablecerPassword(OUsuario PmtPeticion)
+        {
+            ORespuesta<string> res = _D.RestablecerPassword(PmtPeticion);
+            return Json(res);
+        }
     }
 }
