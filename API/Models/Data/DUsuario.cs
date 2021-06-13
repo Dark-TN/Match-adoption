@@ -1229,6 +1229,23 @@ namespace API.Models.Data
                     {"@idEstatusTramite", PmtPeticion.IdEstatus }
                 };
                 DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_update_estatus_tramite", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        string email = ds.Tables[0].Rows[0]["email"].ToString();
+                        string status;
+                        if (PmtPeticion.IdEstatus == 1)
+                        {
+                            status = "aceptado.";
+                        }
+                        else
+                        {
+                            status = "rechazado.";
+                        }
+                        bool mail = Email.EnviarCorreo(email, "Cambio en el estatus de su trámite de adopción", "Su trámite de adopción fue " + status);
+                    }
+                }
                 Ls.Exitoso = true;
                 return Ls;
             }
