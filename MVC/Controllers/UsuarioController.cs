@@ -336,7 +336,6 @@ namespace MVC.Controllers
         [HttpPost]
         public ActionResult RegistroSolicitante(FormCollection formCollection)
         {
-            Debug.WriteLine("#######" + formCollection["chkAviso"]);
             if (string.IsNullOrEmpty(formCollection["txtCURPUsuario"]) || string.IsNullOrEmpty(formCollection["txtNombreUsuario"]) ||
                 DateTime.Parse(formCollection["dtFechaNacimientoUsuario"]) == DateTime.MinValue || int.Parse(formCollection["sctSexoUsuario"]) == 0 ||
                 int.Parse(formCollection["sctEstadoCivil"]) == 0 || string.IsNullOrEmpty(formCollection["txtCorreoRegistroUsuario"]) ||

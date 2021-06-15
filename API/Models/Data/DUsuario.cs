@@ -1362,6 +1362,23 @@ namespace API.Models.Data
                     {"@idEstatusUsuario", PmtPeticion.IdEstatus }
                 };
                 DataSet ds = DB.EjecutaProcedimientoAlmacenado("sp_update_estatus_solicitante", Parametros, cadenaConexionLocal);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        string email = ds.Tables[0].Rows[0]["email"].ToString();
+                        string status;
+                        if (PmtPeticion.IdEstatus == 1)
+                        {
+                            status = "activada.";
+                        }
+                        else
+                        {
+                            status = "inactivada.";
+                        }
+                        bool mail = Email.EnviarCorreo(email, "Cambio en el estatus de su cuenta", "Su cuenta fue " + status);
+                    }
+                }
                 Ls.Exitoso = true;
                 return Ls;
             }

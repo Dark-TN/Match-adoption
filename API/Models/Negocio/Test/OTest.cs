@@ -37,6 +37,7 @@ namespace API.Models.Negocio.Test
 
         public void CalificarTest()
         {
+            Random rnd = new Random();
             int dirValidez = this.Preguntas.Where(a => a.IdHabilidad == 10).Select(a => a.Respuesta).Sum();
             if (dirValidez <= 4)
             {
@@ -104,7 +105,7 @@ namespace API.Models.Negocio.Test
             }
             else
             {
-                this.IdEstiloCrianza = 4;
+                this.IdEstiloCrianza = rnd.Next(1, 5);
             }
         }
     }
